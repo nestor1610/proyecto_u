@@ -110,7 +110,7 @@
                                 <input type="email" v-model="descripcion" class="form-control" placeholder="Ingrese descripcion">
                             </div>
                             <div v-show="error_categoria" class="form-group row div-error">
-                                <div class="text-center text-error">
+                                <div class="text-error">
                                     <div v-for="error in error_msj_cat" :key="error" v-text="error">
                                         
                                     </div>
@@ -258,7 +258,7 @@
         display: flex;
         justify-content: center;
     }
-    text-error{
+    .text-error{
         color: red;
         font-weight: bold;
     }

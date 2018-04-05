@@ -47193,7 +47193,7 @@ exports = module.exports = __webpack_require__(42)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\ntext-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -48151,10 +48151,11 @@ var render = function() {
                         [
                           _c(
                             "div",
-                            { staticClass: "text-center text-error" },
+                            { staticClass: "text-center" },
                             _vm._l(_vm.error_msj_cat, function(error) {
                               return _c("div", {
                                 key: error,
+                                staticClass: "text-error",
                                 domProps: { textContent: _vm._s(error) }
                               })
                             })
