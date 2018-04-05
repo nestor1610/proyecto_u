@@ -11,7 +11,7 @@
         <div class="card">
             <div class="card-header">
                 <i class="fa fa-align-justify"></i> Categorías
-                <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalNuevo">
+                <button v-on:click="abrirModal('categoria', 'registrar')" type="button" class="btn btn-secondary">
                     <i class="icon-plus"></i>&nbsp;Nuevo
                 </button>
             </div>
@@ -40,10 +40,10 @@
                     <tbody>
                         <tr v-for="categoria in array_categoria" :key="categoria.id">
                             <td>
-                                <button type="button" class="btn btn-warning btn-sm" data-toggle="modal" data-target="#modalNuevo">
+                                <button v-on:click="abrirModal('categoria', 'actualizar', categoria)" type="button" class="btn btn-warning btn-sm">
                                   <i class="icon-pencil"></i>
                                 </button> &nbsp;
-                                <button type="button" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#modalEliminar">
+                                <button type="button" class="btn btn-danger btn-sm">
                                   <i class="icon-trash"></i>
                                 </button>
                             </td>
@@ -87,12 +87,12 @@
         <!-- Fin ejemplo de tabla Listado -->
     </div>
     <!--Inicio del modal agregar/actualizar-->
-    <div class="modal fade" id="modalNuevo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
+    <div :class="{'mostrar' : modal}" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" style="display: none;" aria-hidden="true">
         <div class="modal-dialog modal-primary modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title">Agregar categoría</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <h4 v-text="titulo_modal" class="modal-title"></h4>
+                    <button type="button" class="close" v-on:click="cerrarModal()" aria-label="Close">
                       <span aria-hidden="true">×</span>
                     </button>
                 </div>
@@ -101,21 +101,22 @@
                         <div class="form-group row">
                             <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                             <div class="col-md-9">
-                                <input type="text" id="nombre" name="nombre" class="form-control" placeholder="Nombre de categoría">
+                                <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de categoría">
                                 <span class="help-block">(*) Ingrese el nombre de la categoría</span>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
                             <div class="col-md-9">
-                                <input type="email" id="descripcion" name="descripcion" class="form-control" placeholder="Enter Email">
+                                <input type="email" v-model="descripcion" class="form-control" placeholder="Enter Email">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-primary">Guardar</button>
+                    <button type="button" class="btn btn-secondary" v-on:click="cerrarModal()">Cerrar</button>
+                    <button v-if="tipo_accion == 1" type="button" class="btn btn-primary">Guardar</button>
+                    <button v-if="tipo_accion == 2" type="button" class="btn btn-primary">Actualizar</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -155,7 +156,10 @@
             return {
                 nombre : '',
                 descripcion : '',
-                array_categoria : []
+                array_categoria : [],
+                modal : 0,
+                titulo_modal : '',
+                tipo_accion : 0
             }
         },
         methods : {
@@ -167,6 +171,34 @@
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            cerrarModal (){
+                this.modal = 0;
+                this.titulo_modal = '';
+                this.nombre = '';
+                this.descripcion = '';
+            },
+            abrirModal (modelo, accion, data = []){
+                switch (modelo){
+                    case "categoria":
+                    {
+                        switch (accion){
+                            case "registrar":
+                            {
+                                this.modal = 1;
+                                this.titulo_modal = 'Registrar Categoria',
+                                this.nombre = '';
+                                this.descripcion = '';
+                                this.tipo_accion = 1;
+                                break;
+                            }
+                            case "actalizar":
+                            {
+
+                            }
+                        }
+                    }
+                }
             }
         },
         mounted() {
@@ -174,3 +206,15 @@
         }
     }
 </script>
+<style>
+    .modal-content{
+        width: 100% !important;
+        position: absolute !important;
+    }
+    .mostrar{
+        display: list-item !important;
+        opacity: 1 !important;
+        position: absolute !important;
+        background-color: #3c29297a !important;
+    }
+</style>
