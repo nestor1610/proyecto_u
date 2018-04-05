@@ -102,20 +102,26 @@
                             <label class="col-md-3 form-control-label" for="text-input">Nombre</label>
                             <div class="col-md-9">
                                 <input type="text" v-model="nombre" class="form-control" placeholder="Nombre de categoría">
-                                <span class="help-block">(*) Ingrese el nombre de la categoría</span>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-md-3 form-control-label" for="email-input">Descripción</label>
                             <div class="col-md-9">
-                                <input type="email" v-model="descripcion" class="form-control" placeholder="Enter Email">
+                                <input type="email" v-model="descripcion" class="form-control" placeholder="Ingrese descripcion">
+                            </div>
+                            <div v-show="error_categoria" class="form-group row div-error">
+                                <div class="text-center text-error">
+                                    <div v-for="error in error_msj_cat" :key="error" v-text="error">
+                                        
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" v-on:click="cerrarModal()">Cerrar</button>
-                    <button v-if="tipo_accion == 1" type="button" class="btn btn-primary">Guardar</button>
+                    <button v-if="tipo_accion == 1" v-on:click="registrarCategoria()" type="button" class="btn btn-primary">Guardar</button>
                     <button v-if="tipo_accion == 2" type="button" class="btn btn-primary">Actualizar</button>
                 </div>
             </div>
@@ -159,7 +165,9 @@
                 array_categoria : [],
                 modal : 0,
                 titulo_modal : '',
-                tipo_accion : 0
+                tipo_accion : 0,
+                error_categoria : 0,
+                error_msj_cat : 0
             }
         },
         methods : {
@@ -171,6 +179,35 @@
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            registrarCategoria (){
+                
+                if (this.validarCategoria()) {
+                    return;
+                }
+
+                let me = this;
+
+                axios.post('/categoria/registrar', {
+                    'nombre': this.nombre,
+                    'descripcion': this.descripcion
+                }).then(function (){
+                    me.cerrarModal();
+                    me.listarCategoria();
+                })
+                .catch(function (){
+                    console.log(error);
+                });
+            },
+            validarCategoria (){
+                this.error_categoria = 0;
+                this.error_msj_cat =[];
+
+                if (!this.nombre) this.error_msj_cat.push('El nombre de la categoria no puede estar vacio');
+
+                if (this.error_msj_cat.length) this.error_categoria = 1;
+
+                return this.error_categoria;
             },
             cerrarModal (){
                 this.modal = 0;
@@ -216,5 +253,13 @@
         opacity: 1 !important;
         position: absolute !important;
         background-color: #3c29297a !important;
+    }
+    .div-error{
+        display: flex;
+        justify-content: center;
+    }
+    text-error{
+        color: red;
+        font-weight: bold;
     }
 </style>
