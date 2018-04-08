@@ -50,7 +50,7 @@
                                 </template>
                                 <template v-else="categoria.condicion">
                                     <button type="button" class="btn btn-info btn-sm" v-on:click="activarCategoria(categoria.id)">
-                                        <i class="icon-ok"></i>
+                                        <i class="icon-check"></i>
                                     </button>
                                 </template>
                             </td>
@@ -223,27 +223,22 @@
                     axios.put('/categoria/desactivar', {
                         'id': categoria_id
                     }).then(function (){
-                        me.cerrarModal();
                         me.listarCategoria();
+                        swal(
+                          'Desactivada',
+                          'La categoria ha sido desactivada',
+                          'success'
+                        )
                     })
                     .catch(function (){
                         console.log(error);
                     });
 
-                    swal(
-                      'Desactivada',
-                      'La categoria ha sido desactivada',
-                      'success'
-                    )
                   } else if (
                     // Read more about handling dismissals
                     result.dismiss === swal.DismissReason.cancel
                   ) {
-                    swal(
-                      'No desactivada',
-                      'La categoria no ha sido desactivada',
-                      'error'
-                    )
+                    
                   }
                 })
             },
@@ -268,27 +263,22 @@
                     axios.put('/categoria/activar', {
                         'id': categoria_id
                     }).then(function (){
-                        me.cerrarModal();
                         me.listarCategoria();
+                        swal(
+                          'Activada',
+                          'La categoria ha sido activada',
+                          'success'
+                        )
                     })
                     .catch(function (){
                         console.log(error);
                     });
 
-                    swal(
-                      'Activada',
-                      'La categoria ha sido activada',
-                      'success'
-                    )
                   } else if (
                     // Read more about handling dismissals
                     result.dismiss === swal.DismissReason.cancel
                   ) {
-                    swal(
-                      'No activada',
-                      'La categoria no ha sido activada',
-                      'error'
-                    )
+                    
                   }
                 })
             },

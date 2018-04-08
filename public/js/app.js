@@ -33465,18 +33465,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     axios.put('/categoria/desactivar', {
                         'id': categoria_id
                     }).then(function () {
-                        me.cerrarModal();
                         me.listarCategoria();
+                        swal('Desactivada', 'La categoria ha sido desactivada', 'success');
                     }).catch(function () {
                         console.log(error);
                     });
-
-                    swal('Desactivada', 'La categoria ha sido desactivada', 'success');
                 } else if (
                 // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {
-                    swal('No desactivada', 'La categoria no ha sido desactivada', 'error');
-                }
+                result.dismiss === swal.DismissReason.cancel) {}
             });
         },
         activarCategoria: function activarCategoria(categoria_id) {
@@ -33502,18 +33498,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     axios.put('/categoria/activar', {
                         'id': categoria_id
                     }).then(function () {
-                        me.cerrarModal();
                         me.listarCategoria();
+                        swal('Activada', 'La categoria ha sido activada', 'success');
                     }).catch(function () {
                         console.log(error);
                     });
-
-                    swal('Activada', 'La categoria ha sido activada', 'success');
                 } else if (
                 // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {
-                    swal('No activada', 'La categoria no ha sido activada', 'error');
-                }
+                result.dismiss === swal.DismissReason.cancel) {}
             });
         },
         validarCategoria: function validarCategoria() {
@@ -33665,7 +33657,7 @@ var render = function() {
                                     }
                                   }
                                 },
-                                [_c("i", { staticClass: "icon-ok" })]
+                                [_c("i", { staticClass: "icon-check" })]
                               )
                             ]
                       ],
