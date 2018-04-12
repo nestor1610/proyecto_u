@@ -19,12 +19,12 @@
                 <div class="form-group row">
                     <div class="col-md-6">
                         <div class="input-group">
-                            <select class="form-control col-md-3" id="opcion" name="opcion">
+                            <select class="form-control col-md-3" v-model="criterio">
                               <option value="nombre">Nombre</option>
                               <option value="descripcion">Descripción</option>
                             </select>
-                            <input type="text" id="texto" name="texto" class="form-control" placeholder="Texto a buscar">
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                            <input v-on:keyup.enter="listarCategoria(1, buscar, criterio)" type="text" v-model="buscar" class="form-control" placeholder="Texto a buscar">
+                            <button v-on:click="listarCategoria(1, buscar, criterio)" type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                         </div>
                     </div>
                 </div>
@@ -70,13 +70,13 @@
                 <nav>
                     <ul class="pagination">
                         <li class="page-item" v-if="pagination.current_page > 1">
-                            <a class="page-link" href="#" v-on:click.prevent="cambiarPagina(pagination.current_page - 1)">Ant</a>
+                            <a class="page-link" href="#" v-on:click.prevent="cambiarPagina(pagination.current_page - 1, buscar, criterio)">Ant</a>
                         </li>
                         <li class="page-item" v-for="page in pageNumber" :key="page" v-bind:class="[page == isActived ? 'active' : '']">
-                            <a class="page-link" href="#" v-on:click.prevent="cambiarPagina(page)" v-text="page"></a>
+                            <a class="page-link" href="#" v-on:click.prevent="cambiarPagina(page, buscar, criterio)" v-text="page"></a>
                         </li>
                         <li class="page-item" v-if="pagination.current_page < pagination.last_page">
-                            <a class="page-link" href="#" v-on:click.prevent="cambiarPagina(pagination.current_page + 1)">Sig</a>
+                            <a class="page-link" href="#" v-on:click.prevent="cambiarPagina(pagination.current_page + 1, buscar, criterio)">Sig</a>
                         </li>
                     </ul>
                 </nav>
@@ -150,7 +150,9 @@
                     'from' : 0,
                     'to' : 0
                 },
-                offset : 3
+                offset : 3,
+                criterio : 'nombre',
+                buscar : ''
             }
         },
         computed : {
@@ -182,9 +184,9 @@
             }
         },
         methods : {
-            listarCategoria (page){
+            listarCategoria (page, buscar, criterio){
                 let me = this;
-                var url = '/categoria?page=' + page;
+                var url = '/categoria?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
@@ -194,12 +196,12 @@
                     console.log(error);
                 });
             },
-            cambiarPagina (page){
+            cambiarPagina (page, buscar, criterio){
                 let me = this;
                 //actualiza la pagina actual
                 me.pagination.current_page = page;
                 //envia la peticion para visualizar la data de esa pagina
-                me.listarCategoria(page);
+                me.listarCategoria(page, buscar, criterio);
             },
             registrarCategoria (){
                 
@@ -214,7 +216,7 @@
                     'descripcion': this.descripcion
                 }).then(function (){
                     me.cerrarModal();
-                    me.listarCategoria();
+                    me.listarCategoria(1, '', 'nombre');
                 })
                 .catch(function (){
                     console.log(error);
@@ -234,7 +236,7 @@
                     'id': this.categoria_id
                 }).then(function (){
                     me.cerrarModal();
-                    me.listarCategoria();
+                    me.listarCategoria(1, '', 'nombre');
                 })
                 .catch(function (){
                     console.log(error);
@@ -261,7 +263,7 @@
                     axios.put('/categoria/desactivar', {
                         'id': categoria_id
                     }).then(function (){
-                        me.listarCategoria();
+                        me.listarCategoria(1, '', 'nombre');
                         swal(
                           'Desactivada',
                           'La categoria ha sido desactivada',
@@ -301,7 +303,7 @@
                     axios.put('/categoria/activar', {
                         'id': categoria_id
                     }).then(function (){
-                        me.listarCategoria();
+                        me.listarCategoria(1, '', 'nombre');
                         swal(
                           'Activada',
                           'La categoria ha sido activada',
@@ -368,7 +370,7 @@
             }
         },
         mounted() {
-            this.listarCategoria();
+            this.listarCategoria(1, this.buscar, this.criterio);
         }
     }
 </script>
