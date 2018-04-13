@@ -25,6 +25,9 @@
                             </select>
                             <input v-on:keyup.enter="listarCategoria(1, buscar, criterio)" type="text" v-model="buscar" class="form-control" placeholder="Texto a buscar">
                             <button v-on:click="listarCategoria(1, buscar, criterio)" type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                            <button v-on:click="limpiarBuscar()" type="submit" class="btn btn-primary">
+                                <i class="icon-trash"></i> Limpiar
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -367,6 +370,11 @@
                         }
                     }
                 }
+            },
+            limpiarBuscar (){
+                this.buscar = '';
+                this.criterio = 'nombre';
+                this.listarCategoria(1, this.buscar, this.criterio);
             }
         },
         mounted() {

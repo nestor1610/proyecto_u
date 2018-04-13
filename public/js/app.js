@@ -33370,6 +33370,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -33594,6 +33597,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         }
                     }
             }
+        },
+        limpiarBuscar: function limpiarBuscar() {
+            this.buscar = '';
+            this.criterio = 'nombre';
+            this.listarCategoria(1, this.buscar, this.criterio);
         }
     },
     mounted: function mounted() {
@@ -33721,6 +33729,23 @@ var render = function() {
                     }
                   },
                   [_c("i", { staticClass: "fa fa-search" }), _vm._v(" Buscar")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    attrs: { type: "submit" },
+                    on: {
+                      click: function($event) {
+                        _vm.limpiarBuscar()
+                      }
+                    }
+                  },
+                  [
+                    _c("i", { staticClass: "icon-trash" }),
+                    _vm._v(" Limpiar\n                        ")
+                  ]
                 )
               ])
             ])
