@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Categoria;
 use App\Articulo;
 
 class ArticuloController extends Controller
 {
     public function index(Request $request)
     {
-        //if (!$request->ajax()) return redirect('/');
+        if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -43,6 +44,18 @@ class ArticuloController extends Controller
             ],
             'articulos' => $articulos
         ];
+    }
+
+    public function listarCategorias(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $categorias = Categoria::where('condicion','1')
+            ->select('id','nombre')
+            ->orderBy('nombre', 'asc')
+            ->get();
+
+        return $categorias;
     }
 
     public function store(Request $request)
