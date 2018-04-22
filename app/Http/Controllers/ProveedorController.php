@@ -16,7 +16,7 @@ class ProveedorController extends Controller
      */
     public function index(Request $request)
     {
-        if (!$request->ajax()) return redirect('/');
+        //if (!$request->ajax()) return redirect('/');
 
         $buscar = $request->buscar;
         $criterio = $request->criterio;
@@ -32,7 +32,7 @@ class ProveedorController extends Controller
         	->select('personas.id', 'personas.nombre', 'personas.tipo_documento',
         		'personas.num_documento', 'personas.direccion', 'personas.telefono',
         		'personas.email', 'proveedores.contacto', 'proveedores.telefono_contacto')
-        	->where('personas'.$criterio, 'like', '%'. $buscar . '%')
+        	->where('personas.'.$criterio, 'like', '%'. $buscar . '%')
         	->orderBy('personas.id', 'desc')->paginate(5);
 
         return [
@@ -74,8 +74,9 @@ class ProveedorController extends Controller
 	        $proveedor->contacto = $request->contacto;
 	        $proveedor->telefono_contacto = $request->telefono_contacto;
 	        $proveedor->id = $persona->id;
+            $proveedor->save();
 
-	        DB::commit();
+            DB::commit();
 
         } catch (Exception $e) {
 
@@ -115,6 +116,7 @@ class ProveedorController extends Controller
 	        $proveedor->contacto = $request->contacto;
 	        $proveedor->telefono_contacto = $request->telefono_contacto;
 	        $proveedor->id = $persona->id;
+            $proveedor->save();
 
 	        DB::commit();
 

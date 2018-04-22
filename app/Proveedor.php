@@ -11,6 +11,8 @@ class Proveedor extends Model
     	'id', 'contacto', 'telefono_contacto'
     ];
 
+    public $timestamps = false;
+
     public function persona()
     {
     	return $this->belongsTo('App\Persona');
