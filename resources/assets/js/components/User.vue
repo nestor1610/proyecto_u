@@ -53,6 +53,16 @@
                                 <button v-on:click="abrirModal('persona', 'actualizar', persona)" type="button" class="btn btn-warning btn-sm">
                                   <i class="icon-pencil"></i>
                                 </button>
+                                <template v-if="persona.condicion">
+                                    <button type="button" class="btn btn-danger btn-sm" v-on:click="desactivarUsuario(persona.id)">
+                                        <i class="icon-trash"></i>
+                                    </button>
+                                </template>
+                                <template v-else>
+                                    <button type="button" class="btn btn-info btn-sm" v-on:click="activarUsuario(persona.id)">
+                                        <i class="icon-check"></i>
+                                    </button>
+                                </template>
                             </td>
                             <td v-text="persona.nombre"></td>
                             <td v-text="persona.tipo_documento"></td>
@@ -138,8 +148,8 @@
                             <label class="col-md-3 form-control-label" for="text-input">Rol (*)</label>
                             <div class="col-md-9">
                                 <select class="form-control" v-model="idrol">
-                                    <option value="0">Seleccione un rol</option>
-                                    <option v-for="rol in array_rol" :key="rol.id" v-text="rol.nombre"></option>
+                                    <option v-bind:value="0">Seleccione un rol</option>
+                                    <option v-for="rol in array_rol" :key="rol.id" v-bind:value="rol.id" v-text="rol.nombre"></option>
                                 </select>
                             </div>
                         </div>
@@ -276,15 +286,16 @@
 
                 let me = this;
 
-                axios.post('/proveedor/registrar', {
+                axios.post('/user/registrar', {
                     'nombre': this.nombre,
                     'tipo_documento': this.tipo_documento,
                     'num_documento': this.num_documento,
                     'direccion': this.direccion,
                     'telefono': this.telefono,
                     'email': this.email,
-                    'contacto': this.contacto,
-                    'telefono_contacto': this.telefono_contacto
+                    'usuario': this.usuario,
+                    'password': this.password,
+                    'idrol': this.idrol
                 }).then(function (){
                     me.cerrarModal();
                     me.listarPersona(1, '', 'nombre');
@@ -301,16 +312,17 @@
 
                 let me = this;
 
-                axios.put('/proveedor/actualizar', {
+                axios.put('/user/actualizar', {
                     'nombre': this.nombre,
                     'tipo_documento': this.tipo_documento,
                     'num_documento': this.num_documento,
                     'direccion': this.direccion,
                     'telefono': this.telefono,
                     'email': this.email,
-                    'contacto': this.contacto,
-                    'telefono_contacto': this.telefono_contacto,
-                    'id': this.persona_id
+                    'usuario': this.usuario,
+                    'password': this.password,
+                    'id': this.persona_id,
+                    'idrol' :this.idrol
                 }).then(function (){
                     me.cerrarModal();
                     me.listarPersona(1, '', 'nombre');
@@ -319,11 +331,97 @@
                     console.log(error);
                 });
             },
+            desactivarUsuario (id){
+                swal({
+                  title: '¿Estas seguro de desactivar este usuario?',
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Aceptar',
+                  cancelButtonText: 'Cancelar',
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: false,
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.value) {
+
+                    let me = this;
+
+                    axios.put('/user/desactivar', {
+                        'id': id
+                    }).then(function (){
+                        me.listarPersona(1, '', 'nombre');
+                        swal(
+                          'Desactivada',
+                          'El usuario ha sido desactivado',
+                          'success'
+                        )
+                    })
+                    .catch(function (){
+                        console.log(error);
+                    });
+
+                  } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                  ) {
+                    
+                  }
+                })
+            },
+            activarUsuario (id){
+                swal({
+                  title: '¿Estas seguro de activar este usuario?',
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Aceptar',
+                  cancelButtonText: 'Cancelar',
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: false,
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.value) {
+
+                    let me = this;
+
+                    axios.put('/user/activar', {
+                        'id': id
+                    }).then(function (){
+                        me.listarPersona(1, '', 'nombre');
+                        swal(
+                          'Activada',
+                          'El usuario ha sido activado',
+                          'success'
+                        )
+                    })
+                    .catch(function (){
+                        console.log(error);
+                    });
+
+                  } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                  ) {
+                    
+                  }
+                })
+            },
             validarPersona (){
                 this.error_persona = 0;
                 this.error_msj_per =[];
 
                 if (!this.nombre) this.error_msj_per.push('El nombre de la persona no puede estar vacio');
+
+                if (!this.usuario) this.error_msj_per.push('El nombre de usuario no puede estar vacio');
+
+                if (!this.password) this.error_msj_per.push('El password del usuario no puede estar vacio');
+
+                if (this.idrol == 0) this.error_msj_per.push('Seleccione un rol para el usuario');
 
                 if (this.error_msj_per.length) this.error_persona = 1;
 

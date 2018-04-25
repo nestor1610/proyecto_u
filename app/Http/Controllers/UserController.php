@@ -108,7 +108,7 @@ class UserController extends Controller
         	DB::beginTransaction();
 
         	//Buscar el proveedor a modificar
-        	$user = Proveedor::findOrFail($request->id);
+        	$user = User::findOrFail($request->id);
         	$persona = Persona::findOrFail($user->id);
 
 	        $persona->nombre = $request->nombre;
