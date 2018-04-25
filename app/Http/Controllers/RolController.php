@@ -32,5 +32,15 @@ class RolController extends Controller
         ];
     }
 
+    public function listarRol()
+    {
+        $roles = Rol::where('condicion', 1)
+            ->select('id', 'nombre')
+            ->orderBy('nombre', 'ASC')
+            ->get();
+
+        return $roles;
+    }
+
 
 }
