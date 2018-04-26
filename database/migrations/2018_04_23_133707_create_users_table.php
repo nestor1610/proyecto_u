@@ -26,6 +26,15 @@ class CreateUsersTable extends Migration
 
             $table->rememberToken();
         });
+
+        DB::table('users')->insert([
+            'id' => 1,
+            'usuario' => 'nestor1610',
+            'password' => bcrypt( '24524502' ),
+            'condicion' => 1,
+            'idrol' => 1,
+            'id' => 1
+        ]);
     }
 
     /**
