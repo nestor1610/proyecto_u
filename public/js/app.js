@@ -35432,6 +35432,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 
@@ -35462,7 +35463,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'to': 0
             },
             offset: 3,
-            criterio: 'nombre',
+            criterio: 'articulos.nombre',
             buscar: ''
         };
     },
@@ -35711,7 +35712,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         limpiarBuscar: function limpiarBuscar() {
             this.buscar = '';
-            this.criterio = 'nombre';
+            this.criterio = 'articulos.nombre';
             this.listarArticulo(1, this.buscar, this.criterio);
         }
     },
@@ -38526,12 +38527,18 @@ var render = function() {
                     }
                   },
                   [
-                    _c("option", { attrs: { value: "nombre" } }, [
+                    _c("option", { attrs: { value: "articulos.nombre" } }, [
                       _vm._v("Nombre")
                     ]),
                     _vm._v(" "),
-                    _c("option", { attrs: { value: "descripcion" } }, [
-                      _vm._v("Descripción")
+                    _c(
+                      "option",
+                      { attrs: { value: "articulos.descripcion" } },
+                      [_vm._v("Descripción")]
+                    ),
+                    _vm._v(" "),
+                    _c("option", { attrs: { value: "categorias.nombre" } }, [
+                      _vm._v("Nombre Categoria")
                     ])
                   ]
                 ),

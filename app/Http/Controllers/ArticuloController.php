@@ -25,7 +25,7 @@ class ArticuloController extends Controller
 
         } else {
 
-            $articulos =  Articulo::where('articulos.'.$criterio, 'like', '%'.$buscar.'%')
+            $articulos =  Articulo::where($criterio, 'like', '%'.$buscar.'%')
         	->join('categorias', 'articulos.id_categoria', '=', 'categorias.id')
         	->select('articulos.id', 'articulos.id_categoria', 'articulos.codigo', 'articulos.nombre',
         	 	'categorias.nombre as nombre_categoria', 'articulos.precio_venta', 'articulos.stock', 

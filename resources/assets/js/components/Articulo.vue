@@ -20,8 +20,9 @@
                     <div class="col-md-6">
                         <div class="input-group">
                             <select class="form-control col-md-3" v-model="criterio">
-                              <option value="nombre">Nombre</option>
-                              <option value="descripcion">Descripción</option>
+                              <option value="articulos.nombre">Nombre</option>
+                              <option value="articulos.descripcion">Descripción</option>
+                              <option value="categorias.nombre">Nombre Categoria</option>
                             </select>
                             <input v-on:keyup.enter="listarArticulo(1, buscar, criterio)" type="text" v-model="buscar" class="form-control" placeholder="Texto a buscar">
                             <button v-on:click="listarArticulo(1, buscar, criterio)" type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
@@ -203,7 +204,7 @@
                     'to' : 0
                 },
                 offset : 3,
-                criterio : 'nombre',
+                criterio : 'articulos.nombre',
                 buscar : ''
             }
         },
@@ -466,7 +467,7 @@
             },
             limpiarBuscar (){
                 this.buscar = '';
-                this.criterio = 'nombre';
+                this.criterio = 'articulos.nombre';
                 this.listarArticulo(1, this.buscar, this.criterio);
             }
         },
