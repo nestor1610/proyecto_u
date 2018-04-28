@@ -140,7 +140,7 @@
                     <div class="form-group row border">
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Articulo</label>
+                                <label>Articulo <span style="color:red;" v-show="id_articulo == 0">(*Seleccione)</span></label>
                                 <div class="form-inline">
                                     <input type="text" class="form-control" v-model="codigo" v-on:keyup.enter="buscarArticulo" placeholder="Ingrese articulo">
                                     <button class="btn btn-primary">...</button>
@@ -150,13 +150,13 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label>Precio</label>
+                                <label>Precio <span style="color:red;" v-show="precio == 0">(*Ingrese)</span></label>
                                 <input type="number" value="0" step="any" class="form-control" v-model="precio">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label>Cantidad</label>
+                                <label>Cantidad <span style="color:red;" v-show="cantidad == 0">(*Ingrese)</span></label>
                                 <input type="number" value="0" class="form-control" v-model="cantidad">
                             </div>
                         </div>
@@ -197,15 +197,15 @@
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="rigth"><strong>Total parcial:</strong></td>
+                                        <td colspan="4" align="right"><strong>Total parcial:</strong></td>
                                         <td>$ 5</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="rigth"><strong>Total Parcial:</strong></td>
+                                        <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
                                         <td>$ 1</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="rigth"><strong>Total Neto:</strong></td>
+                                        <td colspan="4" align="right"><strong>Total Neto:</strong></td>
                                         <td>$ 6</td>
                                     </tr>
                                 </tbody>
@@ -396,14 +396,54 @@
                 //envia la peticion para visualizar la data de esa pagina
                 me.listarIngreso(page, buscar, criterio);
             },
+            encuentra (id_articulo){
+                var sw = false;
+
+                for (var i = 0; i < this.array_detalle.length; i++) {
+                    
+                    if (this.array_detalle[i].id_articulo == id_articulo) {
+                        
+                        sw = true;
+
+                    }
+
+                }
+
+                return sw;
+            },
             agregarDetalle (){
                 let me = this;
-                me.array_detalle.push({
-                    id_articulo : me.id_articulo,
-                    articulo : me.articulo,
-                    cantidad : me.cantidad,
-                    precio : me.precio
-                });
+
+                if (me.id_articulo == 0 || me.cantidad == 0 || me.precio == 0)
+                {
+                }
+                else {
+
+                    if ( me.encuentra(me.id_articulo) ) {
+                        swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'Ese articulo ya se encuentra agregado',
+                        })
+                    }
+                    else{
+
+                        me.array_detalle.push({
+                            id_articulo : me.id_articulo,
+                            articulo : me.articulo,
+                            cantidad : me.cantidad,
+                            precio : me.precio
+                        });
+
+                        me.codigo = '';
+                        me.id_articulo = 0;
+                        me.articulo = '';
+                        me.cantidad = 0;
+                        me.precio = 0;
+                        
+                    }
+                }
+
             },
             registrarIngreso (){
                 

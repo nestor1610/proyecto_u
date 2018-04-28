@@ -44196,14 +44196,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             //envia la peticion para visualizar la data de esa pagina
             me.listarIngreso(page, buscar, criterio);
         },
+        encuentra: function encuentra(id_articulo) {
+            var sw = false;
+
+            for (var i = 0; i < this.array_detalle.length; i++) {
+
+                if (this.array_detalle[i].id_articulo == id_articulo) {
+
+                    sw = true;
+                }
+            }
+
+            return sw;
+        },
         agregarDetalle: function agregarDetalle() {
             var me = this;
-            me.array_detalle.push({
-                id_articulo: me.id_articulo,
-                articulo: me.articulo,
-                cantidad: me.cantidad,
-                precio: me.precio
-            });
+
+            if (me.id_articulo == 0 || me.cantidad == 0 || me.precio == 0) {} else {
+
+                if (me.encuentra(me.id_articulo)) {
+                    swal({
+                        type: 'error',
+                        title: 'Error...',
+                        text: 'Ese articulo ya se encuentra agregado'
+                    });
+                } else {
+
+                    me.array_detalle.push({
+                        id_articulo: me.id_articulo,
+                        articulo: me.articulo,
+                        cantidad: me.cantidad,
+                        precio: me.precio
+                    });
+
+                    me.codigo = '';
+                    me.id_articulo = 0;
+                    me.articulo = '';
+                    me.cantidad = 0;
+                    me.precio = 0;
+                }
+            }
         },
         registrarIngreso: function registrarIngreso() {
 
@@ -44962,7 +44994,24 @@ var render = function() {
                   _c("div", { staticClass: "form-group row border" }, [
                     _c("div", { staticClass: "col-md-6" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Articulo")]),
+                        _c("label", [
+                          _vm._v("Articulo "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.id_articulo == 0,
+                                  expression: "id_articulo == 0"
+                                }
+                              ],
+                              staticStyle: { color: "red" }
+                            },
+                            [_vm._v("(*Seleccione)")]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c("div", { staticClass: "form-inline" }, [
                           _c("input", {
@@ -45036,7 +45085,24 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-2" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Precio")]),
+                        _c("label", [
+                          _vm._v("Precio "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.precio == 0,
+                                  expression: "precio == 0"
+                                }
+                              ],
+                              staticStyle: { color: "red" }
+                            },
+                            [_vm._v("(*Ingrese)")]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c("input", {
                           directives: [
@@ -45064,7 +45130,24 @@ var render = function() {
                     _vm._v(" "),
                     _c("div", { staticClass: "col-md-2" }, [
                       _c("div", { staticClass: "form-group" }, [
-                        _c("label", [_vm._v("Cantidad")]),
+                        _c("label", [
+                          _vm._v("Cantidad "),
+                          _c(
+                            "span",
+                            {
+                              directives: [
+                                {
+                                  name: "show",
+                                  rawName: "v-show",
+                                  value: _vm.cantidad == 0,
+                                  expression: "cantidad == 0"
+                                }
+                              ],
+                              staticStyle: { color: "red" }
+                            },
+                            [_vm._v("(*Ingrese)")]
+                          )
+                        ]),
                         _vm._v(" "),
                         _c("input", {
                           directives: [
@@ -45433,7 +45516,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", { staticStyle: { "background-color": "#CEECF5" } }, [
-      _c("td", { attrs: { colspan: "4", align: "rigth" } }, [
+      _c("td", { attrs: { colspan: "4", align: "right" } }, [
         _c("strong", [_vm._v("Total parcial:")])
       ]),
       _vm._v(" "),
@@ -45445,7 +45528,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", { staticStyle: { "background-color": "#CEECF5" } }, [
-      _c("td", { attrs: { colspan: "4", align: "rigth" } }, [
+      _c("td", { attrs: { colspan: "4", align: "right" } }, [
         _c("strong", [_vm._v("Total Parcial:")])
       ]),
       _vm._v(" "),
@@ -45457,7 +45540,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", { staticStyle: { "background-color": "#CEECF5" } }, [
-      _c("td", { attrs: { colspan: "4", align: "rigth" } }, [
+      _c("td", { attrs: { colspan: "4", align: "right" } }, [
         _c("strong", [_vm._v("Total Neto:")])
       ]),
       _vm._v(" "),
