@@ -98,9 +98,15 @@
                         <div class="col-md-9">
                             <div class="form-group">
                                 <label for="">Proveedor(*)</label>
-                                <select class="form-control">
+                                <v-select
+                                    :on-search="listarProveedor"
+                                    label="nombre"
+                                    :options="array_proveedor"
+                                    placeholder="Buscar Proveedores..."
+                                    :onChange="getDatosProveedor"
+                                >
                                     
-                                </select>
+                                </v-select>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -266,6 +272,7 @@
 </template>
 
 <script>
+    import vSelect from 'vue-select';
     export default {
         data (){
             return {
@@ -278,6 +285,7 @@
                 impuesto : 0.12,
                 total : 0.00,
                 array_ingreso : [],
+                array_proveedor : [],
                 array_detalle : [],
                 listado: 1, //Si visualizo el estado
                 modal : 0,
@@ -297,6 +305,9 @@
                 criterio : 'num_comprobante',
                 buscar : ''
             }
+        },
+        components :{
+            vSelect
         },
         computed : {
             isActived: function (){
@@ -339,15 +350,28 @@
                     console.log(error);
                 });
             },
-            listarRol (){
+            listarProveedor (search, loading){
                 let me = this;
-                var url = '/rol/listarRol';
+
+                loading(true)
+
+                var url = '/proveedor/listarProveedor?filtro=' + search;
 
                 axios.get(url).then(function (response) {
-                    me.array_rol = response.data;
+                    q: search
+                    me.array_proveedor = response.data;
+
+                    loading(false)
+
                 }).catch(function (error) {
                     console.log(error);
                 });
+            },
+            getDatosProveedor (val_1){
+                let me = this;
+                me.loading = true;
+                me.id_proveedor = val_1.id;
+
             },
             cambiarPagina (page, buscar, criterio){
                 let me = this;
