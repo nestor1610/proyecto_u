@@ -162,7 +162,7 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <button class="btn btn-success form-control btnagregar">
+                                <button v-on:click="agregarDetalle()" class="btn btn-success form-control btnagregar">
                                     <i class="icon-plus"></i>
                                 </button>
                             </div>
@@ -178,43 +178,22 @@
                                     <th>Cantidad</th>
                                     <th>Subtotal</th>
                                 </thead>
-                                <tbody>
-                                    <tr>
+                                <tbody v-if="array_detalle.length">
+                                    <tr v-for="detalle in array_detalle" :key="detalle.id">
                                         <td>
                                             <button type="button" class="btn btn-danger btn-sm">
                                                 <i class="icon-close"></i>
                                             </button>
                                         </td>
+                                        <td v-text="detalle.articulo"></td>
                                         <td>
-                                            Articulo n
+                                            <input v-model="detalle.precio" type="number" class="form-control">
                                         </td>
                                         <td>
-                                            <input type="number" value="3" class="form-control">
+                                            <input v-model="detalle.cantidad" type="number" class="form-control">
                                         </td>
                                         <td>
-                                            <input type="number" value="2" class="form-control">
-                                        </td>
-                                        <td>
-                                            $ 6.00
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>
-                                            <button type="button" class="btn btn-danger btn-sm">
-                                                <i class="icon-close"></i>
-                                            </button>
-                                        </td>
-                                        <td>
-                                            Articulo n
-                                        </td>
-                                        <td>
-                                            <input type="number" value="3" class="form-control">
-                                        </td>
-                                        <td>
-                                            <input type="number" value="2" class="form-control">
-                                        </td>
-                                        <td>
-                                            $ 6.00
+                                            {{ detalle.precio * detalle.cantidad }}
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
@@ -228,6 +207,13 @@
                                     <tr style="background-color: #CEECF5;">
                                         <td colspan="4" align="rigth"><strong>Total Neto:</strong></td>
                                         <td>$ 6</td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="5">
+                                            NO hay articulos agregados
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -409,6 +395,15 @@
                 me.pagination.current_page = page;
                 //envia la peticion para visualizar la data de esa pagina
                 me.listarIngreso(page, buscar, criterio);
+            },
+            agregarDetalle (){
+                let me = this;
+                me.array_detalle.push({
+                    id_articulo : me.id_articulo,
+                    articulo : me.articulo,
+                    cantidad : me.cantidad,
+                    precio : me.precio
+                });
             },
             registrarIngreso (){
                 
