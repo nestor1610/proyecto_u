@@ -44076,6 +44076,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -44092,6 +44093,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             array_ingreso: [],
             array_proveedor: [],
             array_detalle: [],
+            array_articulo: [],
+            id_articulo: 0,
+            codigo: '',
+            articulo: '',
+            precio: 0,
+            cantidad: 0,
             listado: 1, //Si visualizo el estado
             modal: 0,
             titulo_modal: '',
@@ -44161,7 +44168,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             loading(true);
 
-            var url = '/proveedor/listarProveedor?filtro=' + search;
+            var url = '/proveedor/listar-proveedor?filtro=' + search;
 
             axios.get(url).then(function (response) {
                 q: search;
@@ -44176,6 +44183,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var me = this;
             me.loading = true;
             me.id_proveedor = val_1.id;
+        },
+        buscarArticulo: function buscarArticulo() {
+            var me = this;
+            var url = '/articulo/buscar-articulo?filtro=' + me.codigo;
+
+            axios.get(url).then(function (response) {
+                me.array_articulo = response.data;
+
+                if (me.array_articulo.length > 0) {
+                    me.articulo = me.array_articulo[0]['nombre'];
+                    me.id_articulo = me.array_articulo[0]['id'];
+                } else {
+
+                    me.articulo = 'No existe articulo';
+                    me.id_articulo = 0;
+                }
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
         cambiarPagina: function cambiarPagina(page, buscar, criterio) {
             var me = this;
@@ -44949,8 +44975,8 @@ var render = function() {
                               {
                                 name: "model",
                                 rawName: "v-model",
-                                value: _vm.id_articulo,
-                                expression: "id_articulo"
+                                value: _vm.codigo,
+                                expression: "codigo"
                               }
                             ],
                             staticClass: "form-control",
@@ -44958,20 +44984,57 @@ var render = function() {
                               type: "text",
                               placeholder: "Ingrese articulo"
                             },
-                            domProps: { value: _vm.id_articulo },
+                            domProps: { value: _vm.codigo },
                             on: {
+                              keyup: function($event) {
+                                if (
+                                  !("button" in $event) &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key,
+                                    "Enter"
+                                  )
+                                ) {
+                                  return null
+                                }
+                                return _vm.buscarArticulo($event)
+                              },
                               input: function($event) {
                                 if ($event.target.composing) {
                                   return
                                 }
-                                _vm.id_articulo = $event.target.value
+                                _vm.codigo = $event.target.value
                               }
                             }
                           }),
                           _vm._v(" "),
                           _c("button", { staticClass: "btn btn-primary" }, [
                             _vm._v("...")
-                          ])
+                          ]),
+                          _vm._v(" "),
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: _vm.articulo,
+                                expression: "articulo"
+                              }
+                            ],
+                            staticClass: "form-control",
+                            attrs: { type: "text", readonly: "" },
+                            domProps: { value: _vm.articulo },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.articulo = $event.target.value
+                              }
+                            }
+                          })
                         ])
                       ])
                     ]),
