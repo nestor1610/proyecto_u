@@ -179,9 +179,9 @@
                                     <th>Subtotal</th>
                                 </thead>
                                 <tbody v-if="array_detalle.length">
-                                    <tr v-for="detalle in array_detalle" :key="detalle.id">
+                                    <tr v-for="(detalle, index) in array_detalle" :key="detalle.id">
                                         <td>
-                                            <button type="button" class="btn btn-danger btn-sm">
+                                            <button @click="eliminarDetalle(index)" type="button" class="btn btn-danger btn-sm">
                                                 <i class="icon-close"></i>
                                             </button>
                                         </td>
@@ -410,6 +410,10 @@
                 }
 
                 return sw;
+            },
+            eliminarDetalle (index){
+                let me = this;
+                me.array_detalle.splice(index, 1);
             },
             agregarDetalle (){
                 let me = this;
