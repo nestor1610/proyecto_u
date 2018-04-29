@@ -111,7 +111,7 @@
                         </div>
                         <div class="col-md-3">
                             <label>Impuesto(*)</label>
-                            <input type="text" class="form-control" v-model="impuesto">
+                            <input type="number" class="form-control" v-model="impuesto">
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
@@ -197,16 +197,16 @@
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total parcial:</strong></td>
-                                        <td>$ 5</td>
+                                        <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
+                                        <td>$ {{ total_parcial = (total - total_impuesto).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
-                                        <td>$ 1</td>
+                                        <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
+                                        <td>$ {{ total_impuesto = ( (total * impuesto) / (1 + impuesto) ).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
                                         <td colspan="4" align="right"><strong>Total Neto:</strong></td>
-                                        <td>$ 6</td>
+                                        <td>$ {{ total = calcularTotal }}</td>
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
@@ -269,7 +269,9 @@
                 tipo_comprobante : 'BOLETA',
                 serie_comprobante : '',
                 num_comprobante : '',
-                impuesto : 0.12,
+                impuesto : '12',
+                total_impuesto : 0.00,
+                total_parcial : 0.00,
                 total : 0.00,
                 array_ingreso : [],
                 array_proveedor : [],
@@ -328,6 +330,17 @@
                 }
 
                 return page_array;
+            },
+            calcularTotal: function (){
+                var resultado = 0;
+
+                for (var i = 0; i < this.array_detalle.length; i++) {
+                    
+                    resultado = resultado + ( this.array_detalle[i].precio * this.array_detalle[i].cantidad );
+
+                }
+
+                return resultado;
             }
         },
         methods : {
