@@ -31,11 +31,16 @@ class User extends Authenticatable
 
     public function rol()
     {
-        return $this->belongsTo('App\Rol');
+        return $this->belongsTo('App\Rol', 'idrol');
     }
 
     public function persona()
     {
-        return $this->belongsTo('App\Persona');
+        return $this->belongsTo('App\Persona', 'id');
+    }
+
+    public function ingresos()
+    {
+        return $this->hasMany('App\Ingreso', 'id_usuario');
     }
 }

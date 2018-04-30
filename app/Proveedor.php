@@ -15,6 +15,11 @@ class Proveedor extends Model
 
     public function persona()
     {
-    	return $this->belongsTo('App\Persona');
+    	return $this->belongsTo('App\Persona', 'id');
+    }
+
+    public function ingresos()
+    {
+        return $this->hasMany('App\Ingreso', 'id_proveedor');
     }
 }

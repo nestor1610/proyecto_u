@@ -20,11 +20,16 @@ class Ingreso extends Model
 
     public function usuario()
     {
-    	return $this->belongsTo('App\User');
+    	return $this->belongsTo('App\User', 'id_usuario');
     }
 
     public function proveedor()
     {
-    	return $this->belongsTo('App\Proveedor');
+    	return $this->belongsTo('App\Proveedor', 'id_proveedor');
+    }
+
+    public function detalleIngresos()
+    {
+        return $this->hasMany('App\DetalleIngreso', 'id_ingreso');
     }
 }

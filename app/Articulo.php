@@ -10,6 +10,11 @@ class Articulo extends Model
 
     public function categoria()
     {
-    	return $this->belongsTo('App\Categoria');
+    	return $this->belongsTo('App\Categoria', 'id_categoria');
+    }
+
+    public function detalleIngresos()
+    {
+    	return $this->hasMany('App\DetalleIngreso', 'id_articulo');
     }
 }
