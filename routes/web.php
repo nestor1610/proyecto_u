@@ -58,6 +58,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::put('/articulo/activar', 'ArticuloController@activar');
 		Route::get('articulo/listar-categorias', 'ArticuloController@listarCategorias');
 		Route::get('articulo/buscar-articulo', 'ArticuloController@buscarArticulo');
+		Route::get('articulo/listarArticulo', 'ArticuloController@listarArticulo');
 
 		/* Proveedores */
 		Route::get('proveedor', 'ProveedorController@index');
@@ -104,6 +105,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::put('/articulo/activar', 'ArticuloController@activar');
 		Route::get('articulo/listar-categorias', 'ArticuloController@listarCategorias');
 		Route::get('articulo/buscar-articulo', 'ArticuloController@buscarArticulo');
+		Route::get('articulo/listar-articulo', 'ArticuloController@listarArticulo');
 
 		/* Proveedores */
 		Route::get('proveedor', 'ProveedorController@index');

@@ -143,7 +143,7 @@
                                 <label>Articulo <span style="color:red;" v-show="id_articulo == 0">(*Seleccione)</span></label>
                                 <div class="form-inline">
                                     <input type="text" class="form-control" v-model="codigo" v-on:keyup.enter="buscarArticulo" placeholder="Ingrese articulo">
-                                    <button class="btn btn-primary">...</button>
+                                    <button @click="abrirModal()" class="btn btn-primary">...</button>
                                     <input type="text" readonly class="form-control" v-model="articulo">
                                 </div>
                             </div>
@@ -242,7 +242,57 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    
+                    <div class="form-group row">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <select class="form-control col-md-3" v-model="criterio_a">
+                                  <option value="articulos.nombre">Nombre</option>
+                                  <option value="articulos.descripcion">Descripción</option>
+                                  <option value="categorias.nombre">Nombre Categoria</option>
+                                  <option value="articulos.codigo">Codigo Categoria</option>
+                                </select>
+                                <input v-on:keyup.enter="listarArticulo(buscar_a, criterio_a)" type="text" v-model="buscar_a" class="form-control" placeholder="Texto a buscar">
+                                <button v-on:click="listarArticulo(buscar_a, criterio_a)" type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Opciones</th>
+                                    <th>Código</th>
+                                    <th>Nombre</th>
+                                    <th>Categoría</th>
+                                    <th>Precio Venta</th>
+                                    <th>Stock</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="articulo in array_articulo" :key="articulo.id">
+                                    <td>
+                                        <button v-on:click="agregarDetalleModal(articulo)" type="button" class="btn btn-success btn-sm">
+                                          <i class="icon-check"></i>
+                                        </button>
+                                    </td>
+                                    <td v-text="articulo.codigo"></td>
+                                    <td v-text="articulo.nombre"></td>
+                                    <td v-text="articulo.nombre_categoria"></td>
+                                    <td v-text="articulo.precio_venta"></td>
+                                    <td v-text="articulo.stock"></td>
+                                    <td>
+                                        <div v-if="articulo.condicion">
+                                            <span class="badge badge-success">Activo</span>
+                                        </div>
+                                        <div v-else>
+                                            <span class="badge badge-danger">Desactivado</span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" v-on:click="cerrarModal()">Cerrar</button>
@@ -298,7 +348,9 @@
                 },
                 offset : 3,
                 criterio : 'num_comprobante',
-                buscar : ''
+                buscar : '',
+                criterio_a : 'articulos.nombre',
+                buscar_a : ''
             }
         },
         components :{
@@ -462,6 +514,19 @@
                 }
 
             },
+            agregarDetalleModal (data = []){
+
+            },
+            listarArticulo (buscar, criterio){
+                let me = this;
+                var url = '/articulo/listarArticulo?buscar=' + buscar + '&criterio=' + criterio;
+
+                axios.get(url).then(function (response) {
+                    me.array_articulo = response.data.data;
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
             registrarIngreso (){
                 
                 if (this.validarPersona()) {
@@ -614,17 +679,6 @@
             cerrarModal (){
                 this.modal = 0;
                 this.titulo_modal = '';
-                this.ingreso_id = 0;
-                this.idrol = 0;
-                this.nombre = '';
-                this.tipo_documento = 'CI';
-                this.num_documento = '';
-                this.direccion = '';
-                this.telefono = '';
-                this.email = '';
-                this.usuario = '';
-                this.password = '';
-                this.error_ingreso = 0;
             },
             mostrarDetalle (){
                 this.listado = 0;
@@ -632,51 +686,9 @@
             ocultarDetalle (){
                 this.listado = 1;
             },
-            abrirModal (modelo, accion, data = []){
-                
-                this.listarRol();
-
-                switch (modelo){
-                    case "ingreso":
-                    {
-                        switch (accion){
-                            case "registrar":
-                            {
-                                this.modal = 1;
-                                this.titulo_modal = 'Registrar Usuario',
-                                this.nombre = '';
-                                this.tipo_documento = 'CI';
-                                this.num_documento = '';
-                                this.direccion = '';
-                                this.telefono = '';
-                                this.email = '';
-                                this.usuario = '';
-                                this.password = '';
-                                this.idrol = 0
-                                this.tipo_accion = 1;
-                                break;
-                            }
-                            case "actualizar":
-                            {
-                                //console.log(data);
-                                this.modal = 1;
-                                this.titulo_modal = 'Actualizar Usuario';
-                                this.tipo_accion = 2;
-                                this.ingreso_id = data['id'];
-                                this.nombre = data['nombre'];
-                                this.tipo_documento = data['tipo_documento'];
-                                this.num_documento = data['num_documento'];
-                                this.direccion = data['direccion'];
-                                this.telefono = data['telefono'];
-                                this.email = data['email'];
-                                this.usuario = data['usuario'];
-                                this.password = data['password'];
-                                this.idrol = data['idrol'];
-                                break;
-                            }
-                        }
-                    }
-                }
+            abrirModal (){
+                this.modal = 1;
+                this.titulo_modal = 'Seleccione uno o varios articulos'
             },
             limpiarBuscar (){
                 this.buscar = '';
