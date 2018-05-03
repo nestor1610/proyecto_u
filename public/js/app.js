@@ -44113,6 +44113,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -44307,6 +44316,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         agregarDetalleModal: function agregarDetalleModal() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+
+            var me = this;
+
+            if (me.encuentra(data['id'])) {
+                swal({
+                    type: 'error',
+                    title: 'Error...',
+                    text: 'Ese articulo ya se encuentra agregado'
+                });
+            } else {
+
+                me.array_detalle.push({
+                    id_articulo: data['id'],
+                    articulo: data['nombre'],
+                    cantidad: 1,
+                    precio: 1
+                });
+            }
         },
         listarArticulo: function listarArticulo(buscar, criterio) {
             var me = this;
@@ -44320,132 +44348,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         registrarIngreso: function registrarIngreso() {
 
-            if (this.validarPersona()) {
+            if (this.validarIngreso()) {
                 return;
             }
 
             var me = this;
 
-            axios.post('/user/registrar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email,
-                'usuario': this.usuario,
-                'password': this.password,
-                'idrol': this.idrol
+            axios.post('/ingreso/registrar', {
+
+                'id_proveedor': this.id_proveedor,
+                'tipo_comprobante': this.tipo_comprobante,
+                'serie_comprobante': this.serie_comprobante,
+                'num_comprobante': this.num_comprobante,
+                'impuesto': this.impuesto,
+                'total': this.total,
+                'data': this.array_detalle
+
             }).then(function () {
-                me.cerrarModal();
-                me.listarIngreso(1, '', 'nombre');
+
+                me.listado = 1;
+                me.listarIngreso(1, '', 'num_comprobante');
+                me.id_proveedor = 0;
+                me.tipo_comprobante = 'BOLETA';
+                me.serie_comprobante = '';
+                me.num_comprobante = '';
+                me.impuesto = '18';
+                me.total = 0.0;
+                me.id_articulo = '';
+                me.cantidad = 0;
+                me.precio = 0;
+                me.array_detalle = [];
             }).catch(function () {
                 console.log(error);
             });
         },
-        actualizarPersona: function actualizarPersona() {
-
-            if (this.validarPersona()) {
-                return;
-            }
-
-            var me = this;
-
-            axios.put('/user/actualizar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email,
-                'usuario': this.usuario,
-                'password': this.password,
-                'id': this.ingreso_id,
-                'idrol': this.idrol
-            }).then(function () {
-                me.cerrarModal();
-                me.listarIngreso(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        desactivarIngreso: function desactivarIngreso(id) {
-            var _this = this;
-
-            swal({
-                title: '¿Estas seguro de desactivar este usuario?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
-
-                    var me = _this;
-
-                    axios.put('/user/desactivar', {
-                        'id': id
-                    }).then(function () {
-                        me.listarIngreso(1, '', 'nombre');
-                        swal('Desactivada', 'El usuario ha sido desactivado', 'success');
-                    }).catch(function () {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        activarUsuario: function activarUsuario(id) {
-            var _this2 = this;
-
-            swal({
-                title: '¿Estas seguro de activar este usuario?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
-
-                    var me = _this2;
-
-                    axios.put('/user/activar', {
-                        'id': id
-                    }).then(function () {
-                        me.listarIngreso(1, '', 'nombre');
-                        swal('Activada', 'El usuario ha sido activado', 'success');
-                    }).catch(function () {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        validarPersona: function validarPersona() {
+        validarIngreso: function validarIngreso() {
             this.error_ingreso = 0;
             this.error_msj_ing = [];
 
-            if (!this.nombre) this.error_msj_ing.push('El nombre de la ingreso no puede estar vacio');
+            if (!this.id_proveedor) this.error_msj_ing.push('Seleccione un proveedor');
 
-            if (!this.usuario) this.error_msj_ing.push('El nombre de usuario no puede estar vacio');
+            if (!this.tipo_comprobante) this.error_msj_ing.push('Seleccione el comprobante');
 
-            if (!this.password) this.error_msj_ing.push('El password del usuario no puede estar vacio');
+            if (!this.num_comprobante) this.error_msj_ing.push('Ingrese el numero de comprobante');
 
-            if (this.idrol == 0) this.error_msj_ing.push('Seleccione un rol para el usuario');
+            if (!this.impuesto) this.error_msj_ing.push('Ingrese el impuesto de compra');
+
+            if (this.array_detalle <= 0) this.error_msj_ing.push('Ingrese detalles');
 
             if (this.error_msj_ing.length) this.error_ingreso = 1;
 
@@ -44456,12 +44405,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.titulo_modal = '';
         },
         mostrarDetalle: function mostrarDetalle() {
+            var me = this;
             this.listado = 0;
+
+            me.id_proveedor = 0;
+            me.tipo_comprobante = 'BOLETA';
+            me.serie_comprobante = '';
+            me.num_comprobante = '';
+            me.impuesto = '12';
+            me.total = 0.0;
+            me.id_articulo = '';
+            me.cantidad = 0;
+            me.precio = 0;
+            me.array_detalle = [];
         },
         ocultarDetalle: function ocultarDetalle() {
             this.listado = 1;
         },
         abrirModal: function abrirModal() {
+            this.array_articulo = [];
             this.modal = 1;
             this.titulo_modal = 'Seleccione uno o varios articulos';
         },
@@ -45015,6 +44977,35 @@ var render = function() {
                           }
                         })
                       ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "col-md-12" }, [
+                      _c(
+                        "div",
+                        {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.error_ingreso,
+                              expression: "error_ingreso"
+                            }
+                          ],
+                          staticClass: "form-group row div-error"
+                        },
+                        [
+                          _c(
+                            "div",
+                            { staticClass: "text-center text-error" },
+                            _vm._l(_vm.error_msj_ing, function(error) {
+                              return _c("div", {
+                                key: error,
+                                domProps: { textContent: _vm._s(error) }
+                              })
+                            })
+                          )
+                        ]
+                      )
                     ])
                   ]),
                   _vm._v(" "),

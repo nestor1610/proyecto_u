@@ -79,15 +79,15 @@ class IngresoController extends Controller
         	$ingreso->estado = 'Registrado';
 	        $ingreso->save();
 
-	        $detalles = $request->data;//Array de detalles
+	        $detalles_ingreso = $request->data;//Array de detalles
 
-	        foreach ($detalles as $key => $detalle) {
+	        foreach ($detalles_ingreso as $key => $detalle_ingreso) {
 	        	
 	        	$detalle = new DetalleIngreso();
 	        	$detalle->id_ingreso = $ingreso->id;
-	        	$detalle->id_articulo = $detalle['id_articulo'];
-	        	$detalle->cantidad = $detalle['cantidad'];
-	        	$detalle->precio = $detalle['precio'];
+	        	$detalle->id_articulo = $detalle_ingreso['id_articulo'];
+	        	$detalle->cantidad = $detalle_ingreso['cantidad'];
+	        	$detalle->precio = $detalle_ingreso['precio'];
 	        	$detalle->save();
 
 	        }

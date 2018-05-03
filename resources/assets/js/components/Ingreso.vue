@@ -136,6 +136,15 @@
                                 <input type="text" class="form-control" placeholder="000x" v-model="num_comprobante">
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div v-show="error_ingreso" class="form-group row div-error">
+                                <div class="text-center text-error">
+                                    <div v-for="error in error_msj_ing" :key="error" v-text="error">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group row border">
                         <div class="col-md-6">
@@ -516,6 +525,25 @@
             },
             agregarDetalleModal (data = []){
 
+                let me = this;
+
+                if ( me.encuentra( data['id'] ) ) {
+                        swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'Ese articulo ya se encuentra agregado',
+                        })
+                    }
+                    else{
+
+                        me.array_detalle.push({
+                            id_articulo : data['id'],
+                            articulo : data['nombre'],
+                            cantidad : 1,
+                            precio : 1
+                        });
+                        
+                    }
             },
             listarArticulo (buscar, criterio){
                 let me = this;
@@ -529,148 +557,54 @@
             },
             registrarIngreso (){
                 
-                if (this.validarPersona()) {
+                if ( this.validarIngreso() ) {
                     return;
                 }
 
                 let me = this;
 
-                axios.post('/user/registrar', {
-                    'nombre': this.nombre,
-                    'tipo_documento': this.tipo_documento,
-                    'num_documento': this.num_documento,
-                    'direccion': this.direccion,
-                    'telefono': this.telefono,
-                    'email': this.email,
-                    'usuario': this.usuario,
-                    'password': this.password,
-                    'idrol': this.idrol
+                axios.post('/ingreso/registrar', {
+
+                    'id_proveedor': this.id_proveedor,
+                    'tipo_comprobante': this.tipo_comprobante,
+                    'serie_comprobante': this.serie_comprobante,
+                    'num_comprobante': this.num_comprobante,
+                    'impuesto': this.impuesto,
+                    'total': this.total,
+                    'data': this.array_detalle
+
                 }).then(function (){
-                    me.cerrarModal();
-                    me.listarIngreso(1, '', 'nombre');
+
+                    me.listado = 1;
+                    me.listarIngreso(1, '', 'num_comprobante');
+                    me.id_proveedor = 0;
+                    me.tipo_comprobante = 'BOLETA';
+                    me.serie_comprobante = '';
+                    me.num_comprobante = '';
+                    me.impuesto = '18';
+                    me.total = 0.0;
+                    me.id_articulo = '';
+                    me.cantidad = 0;
+                    me.precio = 0;
+                    me.array_detalle = [];
                 })
                 .catch(function (){
                     console.log(error);
                 });
             },
-            actualizarPersona (){
-
-                if (this.validarPersona()){
-                    return;
-                }
-
-                let me = this;
-
-                axios.put('/user/actualizar', {
-                    'nombre': this.nombre,
-                    'tipo_documento': this.tipo_documento,
-                    'num_documento': this.num_documento,
-                    'direccion': this.direccion,
-                    'telefono': this.telefono,
-                    'email': this.email,
-                    'usuario': this.usuario,
-                    'password': this.password,
-                    'id': this.ingreso_id,
-                    'idrol' :this.idrol
-                }).then(function (){
-                    me.cerrarModal();
-                    me.listarIngreso(1, '', 'nombre');
-                })
-                .catch(function (){
-                    console.log(error);
-                });
-            },
-            desactivarIngreso (id){
-                swal({
-                  title: '¿Estas seguro de desactivar este usuario?',
-                  type: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Aceptar',
-                  cancelButtonText: 'Cancelar',
-                  confirmButtonClass: 'btn btn-success',
-                  cancelButtonClass: 'btn btn-danger',
-                  buttonsStyling: false,
-                  reverseButtons: true
-                }).then((result) => {
-                  if (result.value) {
-
-                    let me = this;
-
-                    axios.put('/user/desactivar', {
-                        'id': id
-                    }).then(function (){
-                        me.listarIngreso(1, '', 'nombre');
-                        swal(
-                          'Desactivada',
-                          'El usuario ha sido desactivado',
-                          'success'
-                        )
-                    })
-                    .catch(function (){
-                        console.log(error);
-                    });
-
-                  } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                  ) {
-                    
-                  }
-                })
-            },
-            activarUsuario (id){
-                swal({
-                  title: '¿Estas seguro de activar este usuario?',
-                  type: 'warning',
-                  showCancelButton: true,
-                  confirmButtonColor: '#3085d6',
-                  cancelButtonColor: '#d33',
-                  confirmButtonText: 'Aceptar',
-                  cancelButtonText: 'Cancelar',
-                  confirmButtonClass: 'btn btn-success',
-                  cancelButtonClass: 'btn btn-danger',
-                  buttonsStyling: false,
-                  reverseButtons: true
-                }).then((result) => {
-                  if (result.value) {
-
-                    let me = this;
-
-                    axios.put('/user/activar', {
-                        'id': id
-                    }).then(function (){
-                        me.listarIngreso(1, '', 'nombre');
-                        swal(
-                          'Activada',
-                          'El usuario ha sido activado',
-                          'success'
-                        )
-                    })
-                    .catch(function (){
-                        console.log(error);
-                    });
-
-                  } else if (
-                    // Read more about handling dismissals
-                    result.dismiss === swal.DismissReason.cancel
-                  ) {
-                    
-                  }
-                })
-            },
-            validarPersona (){
+            validarIngreso (){
                 this.error_ingreso = 0;
                 this.error_msj_ing =[];
 
-                if (!this.nombre) this.error_msj_ing.push('El nombre de la ingreso no puede estar vacio');
+                if ( !this.id_proveedor ) this.error_msj_ing.push('Seleccione un proveedor');
 
-                if (!this.usuario) this.error_msj_ing.push('El nombre de usuario no puede estar vacio');
+                if ( !this.tipo_comprobante ) this.error_msj_ing.push('Seleccione el comprobante');
 
-                if (!this.password) this.error_msj_ing.push('El password del usuario no puede estar vacio');
+                if ( !this.num_comprobante ) this.error_msj_ing.push('Ingrese el numero de comprobante');
 
-                if (this.idrol == 0) this.error_msj_ing.push('Seleccione un rol para el usuario');
+                if ( !this.impuesto ) this.error_msj_ing.push('Ingrese el impuesto de compra');
+
+                if ( this.array_detalle <= 0 ) this.error_msj_ing.push('Ingrese detalles');
 
                 if (this.error_msj_ing.length) this.error_ingreso = 1;
 
@@ -681,12 +615,25 @@
                 this.titulo_modal = '';
             },
             mostrarDetalle (){
+                let me = this;
                 this.listado = 0;
+
+                me.id_proveedor = 0;
+                me.tipo_comprobante = 'BOLETA';
+                me.serie_comprobante = '';
+                me.num_comprobante = '';
+                me.impuesto = '12';
+                me.total = 0.0;
+                me.id_articulo = '';
+                me.cantidad = 0;
+                me.precio = 0;
+                me.array_detalle = [];
             },
             ocultarDetalle (){
                 this.listado = 1;
             },
             abrirModal (){
+                this.array_articulo = [];
                 this.modal = 1;
                 this.titulo_modal = 'Seleccione uno o varios articulos'
             },
