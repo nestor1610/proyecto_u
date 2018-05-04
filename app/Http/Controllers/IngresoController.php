@@ -51,6 +51,42 @@ class IngresoController extends Controller
         ];
     }
 
+    public function obtenerCabecera(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $id = $request->id;
+
+        $ingreso =  Ingreso::join('personas', 'ingresos.id_proveedor', '=', 'personas.id')
+        ->join('users', 'ingresos.id_usuario', '=', 'users.id')
+        ->select('ingresos.id', 'ingresos.tipo_comprobante', 'ingresos.serie_comprobante',
+            'ingresos.num_comprobante', 'ingresos.fecha_hora', 'ingresos.impuesto',
+            'ingresos.total', 'ingresos.estado', 'personas.nombre', 'users.usuario')
+        ->where('ingresos.id', '=', $id)
+        ->orderBy('ingresos.id', 'desc')
+        ->take(1)
+        ->get();
+        
+
+        return $ingreso;
+    }
+
+    public function obtenerDetalles(Request $request)
+    {
+        if (!$request->ajax()) return redirect('/');
+
+        $id = $request->id;
+
+        $detalles =  DetalleIngreso::join('articulos', 'detalle_ingresos.id_articulo', '=', 'articulos.id')
+        ->select('detalle_ingresos.cantidad', 'detalle_ingresos.precio', 'articulos.nombre as articulo')
+        ->where('detalle_ingresos.id_ingreso', '=', $id)
+        ->orderBy('detalle_ingresos.id', 'desc')
+        ->get();
+        
+
+        return $detalles;
+    }
+
     /**
      * Store a newly created resource in storage.
      *

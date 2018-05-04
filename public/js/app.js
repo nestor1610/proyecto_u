@@ -44216,7 +44216,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             tipo_comprobante: 'BOLETA',
             serie_comprobante: '',
             num_comprobante: '',
-            impuesto: '12',
+            impuesto: 0.12,
             total_impuesto: 0.00,
             total_parcial: 0.00,
             total: 0.00,
@@ -44455,7 +44455,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 me.tipo_comprobante = 'BOLETA';
                 me.serie_comprobante = '';
                 me.num_comprobante = '';
-                me.impuesto = '18';
+                me.impuesto = 0.12;
                 me.total = 0.0;
                 me.id_articulo = '';
                 me.cantidad = 0;
@@ -44495,7 +44495,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             me.tipo_comprobante = 'BOLETA';
             me.serie_comprobante = '';
             me.num_comprobante = '';
-            me.impuesto = '12';
+            me.impuesto = 0.12;
             me.total = 0.0;
             me.id_articulo = '';
             me.cantidad = 0;
@@ -44506,7 +44506,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.listado = 1;
         },
         verIngreso: function verIngreso(id) {
-            this.listado = 2;
+            var me = this;
+            me.listado = 2;
+
+            //obtener los datos del ingreso
+            var array_ingreso_t = [];
+            var url = '/ingreso/obtener-cabecera?id=' + id;
+
+            axios.get(url).then(function (response) {
+                array_ingreso_t = response.data;
+
+                me.proveedor = array_ingreso_t[0]['nombre'];
+                me.tipo_comprobante = array_ingreso_t[0]['tipo_comprobante'];
+                me.serie_comprobante = array_ingreso_t[0]['serie_comprobante'];
+                me.num_comprobante = array_ingreso_t[0]['num_comprobante'];
+                me.impuesto = array_ingreso_t[0]['impuesto'];
+                me.total = array_ingreso_t[0]['total'];
+            }).catch(function (error) {
+                console.log(error);
+            });
+            //obtener los  datos de los detalles
+            var url_d = '/ingreso/obtener-detalles?id=' + id;
+
+            axios.get(url_d).then(function (response) {
+                me.array_detalle = response.data;
+            }).catch(function (error) {
+                console.log(error);
+            });
         },
         abrirModal: function abrirModal() {
             this.array_articulo = [];
@@ -45573,7 +45599,7 @@ var render = function() {
                         _c("div", { staticClass: "col-md-9" }, [
                           _c("div", { staticClass: "form-group" }, [
                             _c("label", { attrs: { for: "" } }, [
-                              _vm._v("Proveedor(*)")
+                              _vm._v("Proveedor")
                             ]),
                             _vm._v(" "),
                             _c("p", {
@@ -45592,7 +45618,7 @@ var render = function() {
                         _vm._v(" "),
                         _c("div", { staticClass: "col-md-4" }, [
                           _c("div", { staticClass: "form-group" }, [
-                            _c("label", [_vm._v("Tipo Comprobante(*)")]),
+                            _c("label", [_vm._v("Tipo Comprobante")]),
                             _vm._v(" "),
                             _c("p", {
                               domProps: {
@@ -45725,9 +45751,7 @@ var render = function() {
                                                 "$ " +
                                                   _vm._s(
                                                     (_vm.total_impuesto = (
-                                                      _vm.total *
-                                                      _vm.impuesto /
-                                                      (1 + _vm.impuesto)
+                                                      _vm.total * _vm.impuesto
                                                     ).toFixed(2))
                                                   )
                                               )
@@ -45746,13 +45770,7 @@ var render = function() {
                                             _vm._m(10),
                                             _vm._v(" "),
                                             _c("td", [
-                                              _vm._v(
-                                                "$ " +
-                                                  _vm._s(
-                                                    (_vm.total =
-                                                      _vm.calcularTotal)
-                                                  )
-                                              )
+                                              _vm._v("$ " + _vm._s(_vm.total))
                                             ])
                                           ]
                                         )
@@ -46199,7 +46217,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
       _c("strong", [_vm._v("Total Parcial:")])
     ])
   },
@@ -46207,7 +46225,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
       _c("strong", [_vm._v("Total Impuesto:")])
     ])
   },
@@ -46215,7 +46233,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto:")])
     ])
   },
@@ -46224,7 +46242,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("td", { attrs: { colspan: "5" } }, [
+      _c("td", { attrs: { colspan: "4" } }, [
         _vm._v(
           "\n                                        NO hay articulos agregados\n                                    "
         )

@@ -243,7 +243,7 @@
                     <div class="form-group row border">
                         <div class="col-md-9">
                             <div class="form-group">
-                                <label for="">Proveedor(*)</label>
+                                <label for="">Proveedor</label>
                                 <p v-text="proveedor"></p>
                             </div>
                         </div>
@@ -253,7 +253,7 @@
                         </div>
                         <div class="col-md-4">
                             <div class="form-group">
-                                <label>Tipo Comprobante(*)</label>
+                                <label>Tipo Comprobante</label>
                                 <p v-text="tipo_comprobante"></p>
                             </div>
                         </div>
@@ -289,21 +289,21 @@
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
+                                        <td colspan="3" align="right"><strong>Total Parcial:</strong></td>
                                         <td>$ {{ total_parcial = (total - total_impuesto).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
-                                        <td>$ {{ total_impuesto = ( (total * impuesto) / (1 + impuesto) ).toFixed(2) }}</td>
+                                        <td colspan="3" align="right"><strong>Total Impuesto:</strong></td>
+                                        <td>$ {{ total_impuesto = ( (total * impuesto) ).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total Neto:</strong></td>
-                                        <td>$ {{ total = calcularTotal }}</td>
+                                        <td colspan="3" align="right"><strong>Total Neto:</strong></td>
+                                        <td>$ {{ total }}</td>
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
                                     <tr>
-                                        <td colspan="5">
+                                        <td colspan="4">
                                             NO hay articulos agregados
                                         </td>
                                     </tr>
@@ -411,7 +411,7 @@
                 tipo_comprobante : 'BOLETA',
                 serie_comprobante : '',
                 num_comprobante : '',
-                impuesto : '12',
+                impuesto : 0.12,
                 total_impuesto : 0.00,
                 total_parcial : 0.00,
                 total : 0.00,
@@ -664,7 +664,7 @@
                     me.tipo_comprobante = 'BOLETA';
                     me.serie_comprobante = '';
                     me.num_comprobante = '';
-                    me.impuesto = '18';
+                    me.impuesto = 0.12;
                     me.total = 0.0;
                     me.id_articulo = '';
                     me.cantidad = 0;
@@ -705,7 +705,7 @@
                 me.tipo_comprobante = 'BOLETA';
                 me.serie_comprobante = '';
                 me.num_comprobante = '';
-                me.impuesto = '12';
+                me.impuesto = 0.12;
                 me.total = 0.0;
                 me.id_articulo = '';
                 me.cantidad = 0;
@@ -716,9 +716,34 @@
                 this.listado = 1;
             },
             verIngreso (id){
-                this.listado = 2;
+                let me = this;
+                me.listado = 2;
 
 
+                //obtener los datos del ingreso
+                var array_ingreso_t = [];
+                var url = '/ingreso/obtener-cabecera?id=' + id;
+
+                axios.get(url).then(function (response) {
+                    array_ingreso_t = response.data;
+
+                    me.proveedor = array_ingreso_t[0]['nombre'];
+                    me.tipo_comprobante = array_ingreso_t[0]['tipo_comprobante'];
+                    me.serie_comprobante = array_ingreso_t[0]['serie_comprobante'];
+                    me.num_comprobante = array_ingreso_t[0]['num_comprobante'];
+                    me.impuesto = array_ingreso_t[0]['impuesto'];
+                    me.total = array_ingreso_t[0]['total'];
+                }).catch(function (error) {
+                    console.log(error);
+                });
+                //obtener los  datos de los detalles
+                var url_d = '/ingreso/obtener-detalles?id=' + id;
+
+                axios.get(url_d).then(function (response) {
+                    me.array_detalle = response.data;
+                }).catch(function (error) {
+                    console.log(error);
+                });
             },
             abrirModal (){
                 this.array_articulo = [];
