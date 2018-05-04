@@ -69,7 +69,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		/* Ingresos */
 		Route::get('ingreso', 'IngresoController@index');
 		Route::post('/ingreso/registrar', 'IngresoController@store');
-		Route::put('/Ingreso/desactivar', 'IngresoController@desactivar');
+		Route::put('/ingreso/desactivar', 'IngresoController@desactivar');
 
 	});
 
@@ -116,7 +116,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		/* Ingresos */
 		Route::get('ingreso', 'IngresoController@index');
 		Route::post('/ingreso/registrar', 'IngresoController@store');
-		Route::put('/Ingreso/desactivar', 'IngresoController@desactivar');
+		Route::put('/ingreso/desactivar', 'IngresoController@desactivar');
 
 		/* Clientes */
 		Route::get('cliente', 'ClienteController@index');

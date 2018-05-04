@@ -16,7 +16,7 @@
                 </button>
             </div>
             <!-- Listado -->
-            <template v-if="listado">
+            <template v-if="listado == 1">
                 <div class="card-body">
                     <div class="form-group row">
                         <div class="col-md-6">
@@ -53,7 +53,7 @@
                             <tbody>
                                 <tr v-for="ingreso in array_ingreso" :key="ingreso.id">
                                     <td>
-                                        <button v-on:click="abrirModal('ingreso', 'actualizar', ingreso)" type="button" class="btn btn-success btn-sm">
+                                        <button v-on:click="verIngreso(ingreso.id)" type="button" class="btn btn-success btn-sm">
                                           <i class="icon-eye"></i>
                                         </button>
                                         <template v-if="ingreso.estado == 'Registrado'">
@@ -92,7 +92,7 @@
             </template>
             <!-- Fin Listado -->
             <!-- Detalle -->
-            <template v-else>
+            <template v-else-if="listado == 0">
                 <div class="card-body">
                     <div class="form-group row border">
                         <div class="col-md-9">
@@ -237,6 +237,88 @@
                 </div>
             </template>
             <!-- Fin Detalle -->
+            <!-- Ver ingreso -->
+            <template v-else-if="listado == 2">
+                <div class="card-body">
+                    <div class="form-group row border">
+                        <div class="col-md-9">
+                            <div class="form-group">
+                                <label for="">Proveedor(*)</label>
+                                <p v-text="proveedor"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label>Impuesto(*)</label>
+                            <p v-text="impuesto"></p>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tipo Comprobante(*)</label>
+                                <p v-text="tipo_comprobante"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Serie Comprobante</label>
+                                <p v-text="serie_comprobante"></p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Numero Comprobante(*)</label>
+                                <p v-text="num_comprobante"></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row border">
+                        <div class="table-responsive col-md-12">
+                            <table class="table table-bordered table-striped table-sm">
+                                <thead>
+                                    <th>Articulo</th>
+                                    <th>Precio</th>
+                                    <th>Cantidad</th>
+                                    <th>Subtotal</th>
+                                </thead>
+                                <tbody v-if="array_detalle.length">
+                                    <tr v-for="detalle in array_detalle" :key="detalle.id">
+                                        <td v-text="detalle.articulo"></td>
+                                        <td v-text="detalle.precio"></td>
+                                        <td v-text="detalle.cantidad"></td>
+                                        <td>
+                                            {{ detalle.precio * detalle.cantidad }}
+                                        </td>
+                                    </tr>
+                                    <tr style="background-color: #CEECF5;">
+                                        <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
+                                        <td>$ {{ total_parcial = (total - total_impuesto).toFixed(2) }}</td>
+                                    </tr>
+                                    <tr style="background-color: #CEECF5;">
+                                        <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
+                                        <td>$ {{ total_impuesto = ( (total * impuesto) / (1 + impuesto) ).toFixed(2) }}</td>
+                                    </tr>
+                                    <tr style="background-color: #CEECF5;">
+                                        <td colspan="4" align="right"><strong>Total Neto:</strong></td>
+                                        <td>$ {{ total = calcularTotal }}</td>
+                                    </tr>
+                                </tbody>
+                                <tbody v-else>
+                                    <tr>
+                                        <td colspan="5">
+                                            NO hay articulos agregados
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-12">
+                            <button type="button" v-on:click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
+                        </div>
+                    </div>
+                </div>
+            </template>
+            <!-- Fin ver ingreso -->
         </div>
         <!-- Fin ejemplo de tabla Listado -->
     </div>
@@ -324,6 +406,7 @@
             return {
                 ingreso_id : 0,
                 id_proveedor : 0,
+                proveedor : '',
                 nombre : '',
                 tipo_comprobante : 'BOLETA',
                 serie_comprobante : '',
@@ -632,10 +715,55 @@
             ocultarDetalle (){
                 this.listado = 1;
             },
+            verIngreso (id){
+                this.listado = 2;
+
+
+            },
             abrirModal (){
                 this.array_articulo = [];
                 this.modal = 1;
                 this.titulo_modal = 'Seleccione uno o varios articulos'
+            },
+            desactivarIngreso (id){
+                swal({
+                  title: '¿Estas seguro de anular este ingreso?',
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Aceptar',
+                  cancelButtonText: 'Cancelar',
+                  confirmButtonClass: 'btn btn-success',
+                  cancelButtonClass: 'btn btn-danger',
+                  buttonsStyling: false,
+                  reverseButtons: true
+                }).then((result) => {
+                  if (result.value) {
+
+                    let me = this;
+
+                    axios.put('/ingreso/desactivar', {
+                        'id': id
+                    }).then(function (){
+                        me.listarIngreso(1, '', 'num_comprobante');
+                        swal(
+                          'Anulado',
+                          'El ingreso ha sido desactivado',
+                          'success'
+                        )
+                    })
+                    .catch(function (){
+                        console.log(error);
+                    });
+
+                  } else if (
+                    // Read more about handling dismissals
+                    result.dismiss === swal.DismissReason.cancel
+                  ) {
+                    
+                  }
+                })
             },
             limpiarBuscar (){
                 this.buscar = '';
