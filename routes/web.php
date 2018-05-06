@@ -80,6 +80,13 @@ Route::group( ['middleware' => ['auth'] ], function(){
 	*/
 	Route::group( ['middleware' => ['Vendedor'] ], function(){
 
+		/* Ventas */
+		Route::get('venta', 'VentaController@index');
+		Route::post('/venta/registrar', 'VentaController@store');
+		Route::put('/venta/desactivar', 'VentaController@desactivar');
+		Route::get('venta/obtener-cabecera', 'VentaController@obtenerCabecera');
+		Route::get('venta/obtener-detalles', 'VentaController@obtenerDetalles');
+
 		/* Clientes */
 		Route::get('cliente', 'ClienteController@index');
 		Route::post('/cliente/registrar', 'ClienteController@store');
@@ -121,6 +128,13 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::put('/ingreso/desactivar', 'IngresoController@desactivar');
 		Route::get('ingreso/obtener-cabecera', 'IngresoController@obtenerCabecera');
 		Route::get('ingreso/obtener-detalles', 'IngresoController@obtenerDetalles');
+
+		/* Ventas */
+		Route::get('venta', 'VentaController@index');
+		Route::post('/venta/registrar', 'VentaController@store');
+		Route::put('/venta/desactivar', 'VentaController@desactivar');
+		Route::get('venta/obtener-cabecera', 'VentaController@obtenerCabecera');
+		Route::get('venta/obtener-detalles', 'VentaController@obtenerDetalles');
 
 		/* Clientes */
 		Route::get('cliente', 'ClienteController@index');

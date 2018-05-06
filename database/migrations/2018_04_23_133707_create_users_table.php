@@ -29,8 +29,8 @@ class CreateUsersTable extends Migration
 
         DB::table('users')->insert([
             'id' => 1,
-            'usuario' => 'nestor1610',
-            'password' => bcrypt( '24524502' ),
+            'usuario' => 'admin',
+            'password' => bcrypt( 'admin' ),
             'condicion' => 1,
             'idrol' => 1,
             'id' => 1
