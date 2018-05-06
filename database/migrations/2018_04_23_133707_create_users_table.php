@@ -32,8 +32,7 @@ class CreateUsersTable extends Migration
             'usuario' => 'admin',
             'password' => bcrypt( 'admin' ),
             'condicion' => 1,
-            'idrol' => 1,
-            'id' => 1
+            'idrol' => 1
         ]);
     }
 

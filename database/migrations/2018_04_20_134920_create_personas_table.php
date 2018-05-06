@@ -23,6 +23,10 @@ class CreatePersonasTable extends Migration
             $table->string('email', 50)->nullable();
             $table->timestamps();
         });
+
+        DB::table('personas')->insert([
+            'nombre' => 'fulano',
+        ]);
     }
 
     /**

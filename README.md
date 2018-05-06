@@ -11,7 +11,4 @@ INSTALACION:
 
 -Ejecutar las migraciones PHP ARTISAN MIGRATE.
 
--Dentro de la carpeta Database/migrations, estan los archivos "trigger_ar.sql" y "trigger_di.sql".
-Ambos contiene el codigo SQL para los triggers en la BD.
-
 El usuario por defecto es "admin" y su contraseña es "admin".
