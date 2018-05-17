@@ -58,7 +58,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::put('/articulo/activar', 'ArticuloController@activar');
 		Route::get('articulo/listar-categorias', 'ArticuloController@listarCategorias');
 		Route::get('articulo/buscar-articulo', 'ArticuloController@buscarArticulo');
-		Route::get('articulo/listarArticulo', 'ArticuloController@listarArticulo');
+		Route::get('articulo/listar-articulo', 'ArticuloController@listarArticulo');
 
 		/* Proveedores */
 		Route::get('proveedor', 'ProveedorController@index');
@@ -80,6 +80,10 @@ Route::group( ['middleware' => ['auth'] ], function(){
 	*/
 	Route::group( ['middleware' => ['Vendedor'] ], function(){
 
+		/* Articulos */
+		Route::get('articulo/buscar-articulo-venta', 'ArticuloController@buscarArticuloVenta');
+		Route::get('articulo/listar-articulo-venta', 'ArticuloController@listarArticuloVenta');
+
 		/* Ventas */
 		Route::get('venta', 'VentaController@index');
 		Route::post('/venta/registrar', 'VentaController@store');
@@ -91,6 +95,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::get('cliente', 'ClienteController@index');
 		Route::post('/cliente/registrar', 'ClienteController@store');
 		Route::put('/cliente/actualizar', 'ClienteController@update');
+		Route::get('cliente/listar-cliente', 'ClienteController@listarCliente');
 
 	});
 
@@ -115,6 +120,8 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::get('articulo/listar-categorias', 'ArticuloController@listarCategorias');
 		Route::get('articulo/buscar-articulo', 'ArticuloController@buscarArticulo');
 		Route::get('articulo/listar-articulo', 'ArticuloController@listarArticulo');
+		Route::get('articulo/listar-articulo-venta', 'ArticuloController@listarArticuloVenta');
+		Route::get('articulo/buscar-articulo-venta', 'ArticuloController@buscarArticuloVenta');
 
 		/* Proveedores */
 		Route::get('proveedor', 'ProveedorController@index');
@@ -140,6 +147,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::get('cliente', 'ClienteController@index');
 		Route::post('/cliente/registrar', 'ClienteController@store');
 		Route::put('/cliente/actualizar', 'ClienteController@update');
+		Route::get('cliente/listar-cliente', 'ClienteController@listarCliente');
 
 		/* Roles */
 		Route::get('rol', 'RolController@index');

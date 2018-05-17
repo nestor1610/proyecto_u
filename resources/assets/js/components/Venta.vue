@@ -10,7 +10,7 @@
         <!-- Ejemplo de tabla Listado -->
         <div class="card">
             <div class="card-header">
-                <i class="fa fa-align-justify"></i> Ingresos
+                <i class="fa fa-align-justify"></i> Ventas
                 <button v-on:click="mostrarDetalle()" type="button" class="btn btn-secondary">
                     <i class="icon-plus"></i>&nbsp;Nuevo
                 </button>
@@ -26,8 +26,8 @@
                                   <option value="num_comprobante">Numero Comprobante</option>
                                   <option value="fecha_hora">Fecha-Hora</option>
                                 </select>
-                                <input v-on:keyup.enter="listarIngreso(1, buscar, criterio)" type="text" v-model="buscar" class="form-control" placeholder="Texto a buscar">
-                                <button v-on:click="listarIngreso(1, buscar, criterio)" type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
+                                <input v-on:keyup.enter="listarVenta(1, buscar, criterio)" type="text" v-model="buscar" class="form-control" placeholder="Texto a buscar">
+                                <button v-on:click="listarVenta(1, buscar, criterio)" type="submit" class="btn btn-primary"><i class="fa fa-search"></i> Buscar</button>
                                 <button v-on:click="limpiarBuscar()" type="submit" class="btn btn-primary">
                                     <i class="icon-trash"></i> Limpiar
                                 </button>
@@ -40,7 +40,7 @@
                                 <tr>
                                     <th>Opciones</th>
                                     <th>Usuario</th>
-                                    <th>Proveedor</th>
+                                    <th>Cliente</th>
                                     <th>Tipo Comprobante</th>
                                     <th>Serie Comprobante</th>
                                     <th>Numero Comprobante</th>
@@ -51,26 +51,26 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="ingreso in array_ingreso" :key="ingreso.id">
+                                <tr v-for="venta in array_venta" :key="venta.id">
                                     <td>
-                                        <button v-on:click="verIngreso(ingreso.id)" type="button" class="btn btn-success btn-sm">
+                                        <button v-on:click="verVenta(venta.id)" type="button" class="btn btn-success btn-sm">
                                           <i class="icon-eye"></i>
                                         </button>
-                                        <template v-if="ingreso.estado == 'Registrado'">
-                                            <button type="button" class="btn btn-danger btn-sm" v-on:click="desactivarIngreso(ingreso.id)">
+                                        <template v-if="venta.estado == 'Registrado'">
+                                            <button type="button" class="btn btn-danger btn-sm" v-on:click="desactivarVenta(venta.id)">
                                                 <i class="icon-trash"></i>
                                             </button>
                                         </template>
                                     </td>
-                                    <td v-text="ingreso.usuario"></td>
-                                    <td v-text="ingreso.nombre"></td>
-                                    <td v-text="ingreso.tipo_comprobante"></td>
-                                    <td v-text="ingreso.serie_comprobante"></td>
-                                    <td v-text="ingreso.num_comprobante"></td>
-                                    <td v-text="ingreso.fecha_hora"></td>
-                                    <td v-text="ingreso.total"></td>
-                                    <td v-text="ingreso.impuesto"></td>
-                                    <td v-text="ingreso.estado"></td>
+                                    <td v-text="venta.usuario"></td>
+                                    <td v-text="venta.nombre"></td>
+                                    <td v-text="venta.tipo_comprobante"></td>
+                                    <td v-text="venta.serie_comprobante"></td>
+                                    <td v-text="venta.num_comprobante"></td>
+                                    <td v-text="venta.fecha_hora"></td>
+                                    <td v-text="venta.total"></td>
+                                    <td v-text="venta.impuesto"></td>
+                                    <td v-text="venta.estado"></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -97,13 +97,13 @@
                     <div class="form-group row border">
                         <div class="col-md-9">
                             <div class="form-group">
-                                <label for="">Proveedor(*)</label>
+                                <label for="">Cliente(*)</label>
                                 <v-select
-                                    :on-search="listarProveedor"
+                                    :on-search="listarCliente"
                                     label="nombre"
-                                    :options="array_proveedor"
+                                    :options="array_cliente"
                                     placeholder="Buscar Proveedores..."
-                                    :onChange="getDatosProveedor"
+                                    :onChange="getDatosCliente"
                                 >
                                     
                                 </v-select>
@@ -137,9 +137,9 @@
                             </div>
                         </div>
                         <div class="col-md-12">
-                            <div v-show="error_ingreso" class="form-group row div-error">
+                            <div v-show="error_venta" class="form-group row div-error">
                                 <div class="text-center text-error">
-                                    <div v-for="error in error_msj_ing" :key="error" v-text="error">
+                                    <div v-for="error in error_msj_ven" :key="error" v-text="error">
 
                                     </div>
                                 </div>
@@ -147,7 +147,7 @@
                         </div>
                     </div>
                     <div class="form-group row border">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <div class="form-group">
                                 <label>Articulo <span style="color:red;" v-show="id_articulo == 0">(*Seleccione)</span></label>
                                 <div class="form-inline">
@@ -159,14 +159,20 @@
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
-                                <label>Precio <span style="color:red;" v-show="precio == 0">(*Ingrese)</span></label>
-                                <input type="number" value="0" step="any" class="form-control" v-model="precio">
+                                <label>Precio <span style="color:red;" v-show="precio_venta == 0">(*Ingrese)</span></label>
+                                <input type="number" value="0" step="any" class="form-control" v-model="precio_venta">
                             </div>
                         </div>
                         <div class="col-md-2">
                             <div class="form-group">
                                 <label>Cantidad <span style="color:red;" v-show="cantidad == 0">(*Ingrese)</span></label>
                                 <input type="number" value="0" class="form-control" v-model="cantidad">
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <label>Descuento</span></label>
+                                <input type="number" value="0" class="form-control" v-model="descuento">
                             </div>
                         </div>
                         <div class="col-md-2">
@@ -185,6 +191,7 @@
                                     <th>Articulo</th>
                                     <th>Precio</th>
                                     <th>Cantidad</th>
+                                    <th>Descuento</th>
                                     <th>Subtotal</th>
                                 </thead>
                                 <tbody v-if="array_detalle.length">
@@ -196,31 +203,34 @@
                                         </td>
                                         <td v-text="detalle.articulo"></td>
                                         <td>
-                                            <input v-model="detalle.precio" type="number" class="form-control">
+                                            <input v-model="detalle.precio_venta" type="number" class="form-control">
                                         </td>
                                         <td>
                                             <input v-model="detalle.cantidad" type="number" class="form-control">
                                         </td>
                                         <td>
-                                            {{ detalle.precio * detalle.cantidad }}
+                                            <input v-model="detalle.descuento" type="number" class="form-control">
+                                        </td>
+                                        <td>
+                                            {{ detalle.precio_venta * detalle.cantidad }}
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
+                                        <td colspan="5" align="right"><strong>Total Parcial:</strong></td>
                                         <td>$ {{ total_parcial = (total - total_impuesto).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
+                                        <td colspan="5" align="right"><strong>Total Impuesto:</strong></td>
                                         <td>$ {{ total_impuesto = ( (total * impuesto) / (1 + impuesto) ).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="4" align="right"><strong>Total Neto:</strong></td>
+                                        <td colspan="5" align="right"><strong>Total Neto:</strong></td>
                                         <td>$ {{ total = calcularTotal }}</td>
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
                                     <tr>
-                                        <td colspan="5">
+                                        <td colspan="6">
                                             NO hay articulos agregados
                                         </td>
                                     </tr>
@@ -231,20 +241,20 @@
                     <div class="form-group row">
                         <div class="col-md-12">
                             <button type="button" v-on:click="ocultarDetalle()" class="btn btn-secondary">Cerrar</button>
-                            <button type="button" class="btn btn-primary" v-on:click="registrarIngreso()">Registrar Compra</button>
+                            <button type="button" class="btn btn-primary" v-on:click="registrarVenta()">Registrar Venta</button>
                         </div>
                     </div>
                 </div>
             </template>
             <!-- Fin Detalle -->
-            <!-- Ver ingreso -->
+            <!-- Ver venta -->
             <template v-else-if="listado == 2">
                 <div class="card-body">
                     <div class="form-group row border">
                         <div class="col-md-9">
                             <div class="form-group">
                                 <label for="">Proveedor</label>
-                                <p v-text="proveedor"></p>
+                                <p v-text="cliente"></p>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -282,10 +292,10 @@
                                 <tbody v-if="array_detalle.length">
                                     <tr v-for="detalle in array_detalle" :key="detalle.id">
                                         <td v-text="detalle.articulo"></td>
-                                        <td v-text="detalle.precio"></td>
+                                        <td v-text="detalle.precio_venta"></td>
                                         <td v-text="detalle.cantidad"></td>
                                         <td>
-                                            {{ detalle.precio * detalle.cantidad }}
+                                            {{ detalle.precio_venta * detalle.cantidad }}
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
@@ -318,7 +328,7 @@
                     </div>
                 </div>
             </template>
-            <!-- Fin ver ingreso -->
+            <!-- Fin ver venta -->
         </div>
         <!-- Fin ejemplo de tabla Listado -->
     </div>
@@ -387,7 +397,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" v-on:click="cerrarModal()">Cerrar</button>
-                    <button v-if="tipo_accion == 1" v-on:click="registrarIngreso()" type="button" class="btn btn-primary">Guardar</button>
+                    <button v-if="tipo_accion == 1" v-on:click="registrarVenta()" type="button" class="btn btn-primary">Guardar</button>
                     <button v-if="tipo_accion == 2" v-on:click="actualizarPersona()" type="button" class="btn btn-primary">Actualizar</button>
                 </div>
             </div>
@@ -404,10 +414,9 @@
     export default {
         data (){
             return {
-                ingreso_id : 0,
-                id_proveedor : 0,
-                proveedor : '',
-                nombre : '',
+                venta_id : 0,
+                id_cliente : 0,
+                cliente : '',
                 tipo_comprobante : 'BOLETA',
                 serie_comprobante : '',
                 num_comprobante : '',
@@ -415,21 +424,23 @@
                 total_impuesto : 0.00,
                 total_parcial : 0.00,
                 total : 0.00,
-                array_ingreso : [],
-                array_proveedor : [],
+                array_venta : [],
+                array_cliente : [],
                 array_detalle : [],
                 array_articulo : [],
                 id_articulo : 0,
                 codigo : '',
                 articulo : '',
-                precio : 0,
+                precio_venta : 0,
+                stock : 0,
                 cantidad : 0,
+                descuento : 0.00,
                 listado: 1, //Si visualizo el estado
                 modal : 0,
                 titulo_modal : '',
                 tipo_accion : 0,
-                error_ingreso : 0,
-                error_msj_ing : 0,
+                error_venta : 0,
+                error_msj_ven : 0,
                 pagination : {
                     'total' : 0,
                     'current_page' :0,
@@ -480,7 +491,7 @@
 
                 for (var i = 0; i < this.array_detalle.length; i++) {
                     
-                    resultado = resultado + ( this.array_detalle[i].precio * this.array_detalle[i].cantidad );
+                    resultado = resultado + ( this.array_detalle[i].precio_venta * this.array_detalle[i].cantidad );
 
                 }
 
@@ -488,28 +499,28 @@
             }
         },
         methods : {
-            listarIngreso (page, buscar, criterio){
+            listarVenta (page, buscar, criterio){
                 let me = this;
-                var url = '/ingreso?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+                var url = '/venta?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
                 axios.get(url).then(function (response) {
                     var respuesta = response.data;
-                    me.array_ingreso = respuesta.ingresos.data;
+                    me.array_venta = respuesta.ventas.data;
                     me.pagination = respuesta.pagination;
                 }).catch(function (error) {
                     console.log(error);
                 });
             },
-            listarProveedor (search, loading){
+            listarCliente (search, loading){
                 let me = this;
 
                 loading(true)
 
-                var url = '/proveedor/listar-proveedor?filtro=' + search;
+                var url = '/cliente/listar-cliente?filtro=' + search;
 
                 axios.get(url).then(function (response) {
                     q: search
-                    me.array_proveedor = response.data;
+                    me.array_cliente = response.data;
 
                     loading(false)
 
@@ -517,15 +528,14 @@
                     console.log(error);
                 });
             },
-            getDatosProveedor (val_1){
+            getDatosCliente (val_1){
                 let me = this;
                 me.loading = true;
-                me.id_proveedor = val_1.id;
-
+                me.id_cliente = val_1.id;
             },
             buscarArticulo (){
                 let me = this;
-                var url = '/articulo/buscar-articulo?filtro=' + me.codigo;
+                var url = '/articulo/buscar-articulo-venta?filtro=' + me.codigo;
 
                 axios.get(url).then(function (response) {
                     me.array_articulo = response.data;
@@ -534,6 +544,8 @@
                     {
                         me.articulo = me.array_articulo[0]['nombre'];
                         me.id_articulo = me.array_articulo[0]['id'];
+                        me.precio_venta = me.array_articulo[0]['precio_venta'];
+                        me.stock = me.array_articulo[0]['stock'];
 
                     } else{
 
@@ -551,7 +563,7 @@
                 //actualiza la pagina actual
                 me.pagination.current_page = page;
                 //envia la peticion para visualizar la data de esa pagina
-                me.listarIngreso(page, buscar, criterio);
+                me.listarVenta(page, buscar, criterio);
             },
             encuentra (id_articulo){
                 var sw = false;
@@ -575,7 +587,7 @@
             agregarDetalle (){
                 let me = this;
 
-                if (me.id_articulo == 0 || me.cantidad == 0 || me.precio == 0)
+                if (me.id_articulo == 0 || me.cantidad == 0 || me.precio_venta == 0)
                 {
                 }
                 else {
@@ -593,14 +605,14 @@
                             id_articulo : me.id_articulo,
                             articulo : me.articulo,
                             cantidad : me.cantidad,
-                            precio : me.precio
+                            precio_venta : me.precio_venta
                         });
 
                         me.codigo = '';
                         me.id_articulo = 0;
                         me.articulo = '';
                         me.cantidad = 0;
-                        me.precio = 0;
+                        me.precio_venta = 0;
                         
                     }
                 }
@@ -623,14 +635,14 @@
                             id_articulo : data['id'],
                             articulo : data['nombre'],
                             cantidad : 1,
-                            precio : 1
+                            precio_venta : 1
                         });
                         
                     }
             },
             listarArticulo (buscar, criterio){
                 let me = this;
-                var url = '/articulo/listar-articulo?buscar=' + buscar + '&criterio=' + criterio;
+                var url = '/articulo/listar-articulo-venta?buscar=' + buscar + '&criterio=' + criterio;
 
                 axios.get(url).then(function (response) {
                     me.array_articulo = response.data.data;
@@ -638,7 +650,7 @@
                     console.log(error);
                 });
             },
-            registrarIngreso (){
+            registrarVenta (){
                 
                 if ( this.validarIngreso() ) {
                     return;
@@ -646,9 +658,9 @@
 
                 let me = this;
 
-                axios.post('/ingreso/registrar', {
+                axios.post('/venta/registrar', {
 
-                    'id_proveedor': this.id_proveedor,
+                    'id_cliente': this.id_cliente,
                     'tipo_comprobante': this.tipo_comprobante,
                     'serie_comprobante': this.serie_comprobante,
                     'num_comprobante': this.num_comprobante,
@@ -659,8 +671,8 @@
                 }).then(function (){
 
                     me.listado = 1;
-                    me.listarIngreso(1, '', 'num_comprobante');
-                    me.id_proveedor = 0;
+                    me.listarVenta(1, '', 'num_comprobante');
+                    me.id_cliente = 0;
                     me.tipo_comprobante = 'BOLETA';
                     me.serie_comprobante = '';
                     me.num_comprobante = '';
@@ -668,7 +680,7 @@
                     me.total = 0.0;
                     me.id_articulo = '';
                     me.cantidad = 0;
-                    me.precio = 0;
+                    me.precio_venta = 0;
                     me.array_detalle = [];
                 })
                 .catch(function (){
@@ -676,22 +688,22 @@
                 });
             },
             validarIngreso (){
-                this.error_ingreso = 0;
-                this.error_msj_ing =[];
+                this.error_venta = 0;
+                this.error_msj_ven =[];
 
-                if ( !this.id_proveedor ) this.error_msj_ing.push('Seleccione un proveedor');
+                if ( !this.id_cliente ) this.error_msj_ven.push('Seleccione un cliente');
 
-                if ( !this.tipo_comprobante ) this.error_msj_ing.push('Seleccione el comprobante');
+                if ( !this.tipo_comprobante ) this.error_msj_ven.push('Seleccione el comprobante');
 
-                if ( !this.num_comprobante ) this.error_msj_ing.push('Ingrese el numero de comprobante');
+                if ( !this.num_comprobante ) this.error_msj_ven.push('Ingrese el numero de comprobante');
 
-                if ( !this.impuesto ) this.error_msj_ing.push('Ingrese el impuesto de compra');
+                if ( !this.impuesto ) this.error_msj_ven.push('Ingrese el impuesto de compra');
 
-                if ( this.array_detalle <= 0 ) this.error_msj_ing.push('Ingrese detalles');
+                if ( this.array_detalle <= 0 ) this.error_msj_ven.push('Ingrese detalles');
 
-                if (this.error_msj_ing.length) this.error_ingreso = 1;
+                if (this.error_msj_ven.length) this.error_venta = 1;
 
-                return this.error_ingreso;
+                return this.error_venta;
             },
             cerrarModal (){
                 this.modal = 0;
@@ -701,7 +713,7 @@
                 let me = this;
                 this.listado = 0;
 
-                me.id_proveedor = 0;
+                me.id_cliente = 0;
                 me.tipo_comprobante = 'BOLETA';
                 me.serie_comprobante = '';
                 me.num_comprobante = '';
@@ -709,25 +721,25 @@
                 me.total = 0.0;
                 me.id_articulo = '';
                 me.cantidad = 0;
-                me.precio = 0;
+                me.precio_venta = 0;
                 me.array_detalle = [];
             },
             ocultarDetalle (){
                 this.listado = 1;
             },
-            verIngreso (id){
+            verVenta (id){
                 let me = this;
                 me.listado = 2;
 
 
-                //obtener los datos del ingreso
+                //obtener los datos del venta
                 var array_ingreso_t = [];
-                var url = '/ingreso/obtener-cabecera?id=' + id;
+                var url = '/venta/obtener-cabecera?id=' + id;
 
                 axios.get(url).then(function (response) {
                     array_ingreso_t = response.data;
 
-                    me.proveedor = array_ingreso_t[0]['nombre'];
+                    me.cliente = array_ingreso_t[0]['nombre'];
                     me.tipo_comprobante = array_ingreso_t[0]['tipo_comprobante'];
                     me.serie_comprobante = array_ingreso_t[0]['serie_comprobante'];
                     me.num_comprobante = array_ingreso_t[0]['num_comprobante'];
@@ -737,7 +749,7 @@
                     console.log(error);
                 });
                 //obtener los  datos de los detalles
-                var url_d = '/ingreso/obtener-detalles?id=' + id;
+                var url_d = '/venta/obtener-detalles?id=' + id;
 
                 axios.get(url_d).then(function (response) {
                     me.array_detalle = response.data;
@@ -750,9 +762,9 @@
                 this.modal = 1;
                 this.titulo_modal = 'Seleccione uno o varios articulos'
             },
-            desactivarIngreso (id){
+            desactivarVenta (id){
                 swal({
-                  title: '¿Estas seguro de anular este ingreso?',
+                  title: '¿Estas seguro de anular este venta?',
                   type: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#3085d6',
@@ -768,13 +780,13 @@
 
                     let me = this;
 
-                    axios.put('/ingreso/desactivar', {
+                    axios.put('/venta/desactivar', {
                         'id': id
                     }).then(function (){
-                        me.listarIngreso(1, '', 'num_comprobante');
+                        me.listarVenta(1, '', 'num_comprobante');
                         swal(
                           'Anulado',
-                          'El ingreso ha sido desactivado',
+                          'El venta ha sido desactivado',
                           'success'
                         )
                     })
@@ -793,11 +805,11 @@
             limpiarBuscar (){
                 this.buscar = '';
                 this.criterio = 'num_comprobante';
-                this.listarIngreso(1, this.buscar, this.criterio);
+                this.listarVenta(1, this.buscar, this.criterio);
             }
         },
         mounted() {
-            this.listarIngreso(1, this.buscar, this.criterio);
+            this.listarVenta(1, this.buscar, this.criterio);
         }
     }
 </script>
