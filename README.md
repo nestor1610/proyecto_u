@@ -7,6 +7,8 @@ INSTALACION:
 
 -Tras clonar el proyecto, ejecutar la instalacion de dependencias con COMPOSER INSTALL y NPM INSTALL.
 
+-tomar el archivo .env.example y copiarlo con el nombre .env
+
 -En el archivo .env ubicado en el directorio raiz, indicar la base de datos, el usuario y contraseña.
 
 -Ejecutar las migraciones PHP ARTISAN MIGRATE.
