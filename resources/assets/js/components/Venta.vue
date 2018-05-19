@@ -206,13 +206,15 @@
                                             <input v-model="detalle.precio_venta" type="number" class="form-control">
                                         </td>
                                         <td>
+                                            <span style="color:red;" v-show="detalle.cantidad > detalle.stock">Stock: {{ detalle.stock }}</span>
                                             <input v-model="detalle.cantidad" type="number" class="form-control">
                                         </td>
                                         <td>
+                                            <span style="color:red;" v-show="detalle.descuento > ( detalle.precio_venta * detalle.cantidad )">Descuento superior</span>
                                             <input v-model="detalle.descuento" type="number" class="form-control">
                                         </td>
                                         <td>
-                                            {{ detalle.precio_venta * detalle.cantidad }}
+                                            {{ detalle.precio_venta * detalle.cantidad - detalle.descuento }}
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
@@ -287,33 +289,35 @@
                                     <th>Articulo</th>
                                     <th>Precio</th>
                                     <th>Cantidad</th>
+                                    <th>Descuento</th>
                                     <th>Subtotal</th>
                                 </thead>
                                 <tbody v-if="array_detalle.length">
                                     <tr v-for="detalle in array_detalle" :key="detalle.id">
                                         <td v-text="detalle.articulo"></td>
-                                        <td v-text="detalle.precio_venta"></td>
+                                        <td v-text="detalle.precio"></td>
                                         <td v-text="detalle.cantidad"></td>
+                                        <td v-text="detalle.descuento"></td>
                                         <td>
-                                            {{ detalle.precio_venta * detalle.cantidad }}
+                                            {{ detalle.precio * detalle.cantidad - detalle.descuento }}
                                         </td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="3" align="right"><strong>Total Parcial:</strong></td>
+                                        <td colspan="4" align="right"><strong>Total Parcial:</strong></td>
                                         <td>$ {{ total_parcial = (total - total_impuesto).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="3" align="right"><strong>Total Impuesto:</strong></td>
+                                        <td colspan="4" align="right"><strong>Total Impuesto:</strong></td>
                                         <td>$ {{ total_impuesto = ( (total * impuesto) ).toFixed(2) }}</td>
                                     </tr>
                                     <tr style="background-color: #CEECF5;">
-                                        <td colspan="3" align="right"><strong>Total Neto:</strong></td>
+                                        <td colspan="4" align="right"><strong>Total Neto:</strong></td>
                                         <td>$ {{ total }}</td>
                                     </tr>
                                 </tbody>
                                 <tbody v-else>
                                     <tr>
-                                        <td colspan="4">
+                                        <td colspan="5">
                                             NO hay articulos agregados
                                         </td>
                                     </tr>
@@ -397,8 +401,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" v-on:click="cerrarModal()">Cerrar</button>
-                    <button v-if="tipo_accion == 1" v-on:click="registrarVenta()" type="button" class="btn btn-primary">Guardar</button>
-                    <button v-if="tipo_accion == 2" v-on:click="actualizarPersona()" type="button" class="btn btn-primary">Actualizar</button>
                 </div>
             </div>
             <!-- /.modal-content -->
@@ -491,7 +493,7 @@
 
                 for (var i = 0; i < this.array_detalle.length; i++) {
                     
-                    resultado = resultado + ( this.array_detalle[i].precio_venta * this.array_detalle[i].cantidad );
+                    resultado = resultado + ( this.array_detalle[i].precio_venta * this.array_detalle[i].cantidad - this.array_detalle[i].descuento );
 
                 }
 
@@ -601,18 +603,31 @@
                     }
                     else{
 
-                        me.array_detalle.push({
-                            id_articulo : me.id_articulo,
-                            articulo : me.articulo,
-                            cantidad : me.cantidad,
-                            precio_venta : me.precio_venta
-                        });
+                        if(me.cantidad > me.stock){
+                            swal({
+                                type: 'error',
+                                title: 'Error...',
+                                text: 'No hay stock disponible',
+                            })
+                        }
+                        else{
+                            me.array_detalle.push({
+                                id_articulo : me.id_articulo,
+                                articulo : me.articulo,
+                                cantidad : me.cantidad,
+                                precio_venta : me.precio_venta,
+                                descuento : me.descuento,
+                                stock : me.stock
+                            });
 
-                        me.codigo = '';
-                        me.id_articulo = 0;
-                        me.articulo = '';
-                        me.cantidad = 0;
-                        me.precio_venta = 0;
+                            me.codigo = '';
+                            me.id_articulo = 0;
+                            me.articulo = '';
+                            me.cantidad = 0;
+                            me.precio_venta = 0;
+                            me.descuento = 0;
+                            me.stock = 0;
+                        }
                         
                     }
                 }
@@ -635,7 +650,9 @@
                             id_articulo : data['id'],
                             articulo : data['nombre'],
                             cantidad : 1,
-                            precio_venta : 1
+                            precio_venta : data['precio_venta'],
+                            descuento : 0,
+                            stock : data['stock']
                         });
                         
                     }
@@ -652,7 +669,7 @@
             },
             registrarVenta (){
                 
-                if ( this.validarIngreso() ) {
+                if ( this.validarVenta() ) {
                     return;
                 }
 
@@ -681,29 +698,41 @@
                     me.id_articulo = '';
                     me.cantidad = 0;
                     me.precio_venta = 0;
+                    me.codigo = 0;
+                    me.descuento = 0;
+                    me.stock = 0;
                     me.array_detalle = [];
                 })
-                .catch(function (){
+                .catch(function (error){
                     console.log(error);
                 });
             },
-            validarIngreso (){
+            validarVenta (){
+                let me = this;
                 this.error_venta = 0;
                 this.error_msj_ven =[];
+                var art;
 
-                if ( !this.id_cliente ) this.error_msj_ven.push('Seleccione un cliente');
+                me.array_detalle.map( function (x) {
+                    if (x.cantidad > x.stock) {
+                        art = x.articulo + " con stock insuficiente";
+                        me.error_msj_ven.push(art);
+                    }
+                });
 
-                if ( !this.tipo_comprobante ) this.error_msj_ven.push('Seleccione el comprobante');
+                if ( !me.id_cliente ) me.error_msj_ven.push('Seleccione un cliente');
 
-                if ( !this.num_comprobante ) this.error_msj_ven.push('Ingrese el numero de comprobante');
+                if ( !me.tipo_comprobante ) me.error_msj_ven.push('Seleccione el comprobante');
 
-                if ( !this.impuesto ) this.error_msj_ven.push('Ingrese el impuesto de compra');
+                if ( !me.num_comprobante ) me.error_msj_ven.push('Ingrese el numero de comprobante');
 
-                if ( this.array_detalle <= 0 ) this.error_msj_ven.push('Ingrese detalles');
+                if ( !me.impuesto ) me.error_msj_ven.push('Ingrese el impuesto de compra');
 
-                if (this.error_msj_ven.length) this.error_venta = 1;
+                if ( me.array_detalle <= 0 ) me.error_msj_ven.push('Ingrese detalles');
 
-                return this.error_venta;
+                if (me.error_msj_ven.length) me.error_venta = 1;
+
+                return me.error_venta;
             },
             cerrarModal (){
                 this.modal = 0;
@@ -764,7 +793,7 @@
             },
             desactivarVenta (id){
                 swal({
-                  title: '¿Estas seguro de anular este venta?',
+                  title: '¿Estas seguro de anular esta venta?',
                   type: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#3085d6',
@@ -785,12 +814,12 @@
                     }).then(function (){
                         me.listarVenta(1, '', 'num_comprobante');
                         swal(
-                          'Anulado',
-                          'El venta ha sido desactivado',
+                          'Anulada',
+                          'La venta ha sido desactivada',
                           'success'
                         )
                     })
-                    .catch(function (){
+                    .catch(function (error){
                         console.log(error);
                     });
 

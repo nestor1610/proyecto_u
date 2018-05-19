@@ -31,6 +31,25 @@ class CreateTrigger extends Migration
             set a.stock = a.stock - di.cantidad;
            END
         ');
+
+        DB::unprepared('
+        CREATE TRIGGER `tr_updStockVenta` AFTER INSERT ON `detalle_ventas`
+         FOR EACH ROW BEGIN
+            UPDATE articulos SET stock = stock - NEW.cantidad
+            WHERE articulos.id = NEW.id_articulo;
+        END
+        ');
+
+        DB::unprepared('
+        CREATE TRIGGER `tr_updStockVentaAnular` AFTER UPDATE ON `ventas`
+         FOR EACH ROW BEGIN
+            UPDATE articulos a
+            JOIN detalle_ventas dv
+            ON dv.id_articulo = a.id
+            AND dv.id_venta = NEW.id
+            set a.stock = a.stock + dv.cantidad;
+           END
+        ');
     }
 
     /**
@@ -42,5 +61,7 @@ class CreateTrigger extends Migration
     {
         DB::unprepared('DROP TRIGGER `tr_updStockIngreso`');
         DB::unprepared('DROP TRIGGER `tr_updStockIngresoAnular`');
+        DB::unprepared('DROP TRIGGER `tr_updStockVenta`');
+        DB::unprepared('DROP TRIGGER `tr_updStockVentaAnular`');
     }
 }

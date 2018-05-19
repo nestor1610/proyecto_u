@@ -46792,6 +46792,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -46875,7 +46877,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             for (var i = 0; i < this.array_detalle.length; i++) {
 
-                resultado = resultado + this.array_detalle[i].precio_venta * this.array_detalle[i].cantidad;
+                resultado = resultado + (this.array_detalle[i].precio_venta * this.array_detalle[i].cantidad - this.array_detalle[i].descuento);
             }
 
             return resultado;
@@ -46973,18 +46975,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     });
                 } else {
 
-                    me.array_detalle.push({
-                        id_articulo: me.id_articulo,
-                        articulo: me.articulo,
-                        cantidad: me.cantidad,
-                        precio_venta: me.precio_venta
-                    });
+                    if (me.cantidad > me.stock) {
+                        swal({
+                            type: 'error',
+                            title: 'Error...',
+                            text: 'No hay stock disponible'
+                        });
+                    } else {
+                        me.array_detalle.push({
+                            id_articulo: me.id_articulo,
+                            articulo: me.articulo,
+                            cantidad: me.cantidad,
+                            precio_venta: me.precio_venta,
+                            descuento: me.descuento,
+                            stock: me.stock
+                        });
 
-                    me.codigo = '';
-                    me.id_articulo = 0;
-                    me.articulo = '';
-                    me.cantidad = 0;
-                    me.precio_venta = 0;
+                        me.codigo = '';
+                        me.id_articulo = 0;
+                        me.articulo = '';
+                        me.cantidad = 0;
+                        me.precio_venta = 0;
+                        me.descuento = 0;
+                        me.stock = 0;
+                    }
                 }
             }
         },
@@ -47006,7 +47020,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     id_articulo: data['id'],
                     articulo: data['nombre'],
                     cantidad: 1,
-                    precio_venta: 1
+                    precio_venta: data['precio_venta'],
+                    descuento: 0,
+                    stock: data['stock']
                 });
             }
         },
@@ -47022,7 +47038,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         registrarVenta: function registrarVenta() {
 
-            if (this.validarIngreso()) {
+            if (this.validarVenta()) {
                 return;
             }
 
@@ -47051,28 +47067,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 me.id_articulo = '';
                 me.cantidad = 0;
                 me.precio_venta = 0;
+                me.codigo = 0;
+                me.descuento = 0;
+                me.stock = 0;
                 me.array_detalle = [];
-            }).catch(function () {
+            }).catch(function (error) {
                 console.log(error);
             });
         },
-        validarIngreso: function validarIngreso() {
+        validarVenta: function validarVenta() {
+            var me = this;
             this.error_venta = 0;
             this.error_msj_ven = [];
+            var art;
 
-            if (!this.id_cliente) this.error_msj_ven.push('Seleccione un cliente');
+            me.array_detalle.map(function (x) {
+                if (x.cantidad > x.stock) {
+                    art = x.articulo + " con stock insuficiente";
+                    me.error_msj_ven.push(art);
+                }
+            });
 
-            if (!this.tipo_comprobante) this.error_msj_ven.push('Seleccione el comprobante');
+            if (!me.id_cliente) me.error_msj_ven.push('Seleccione un cliente');
 
-            if (!this.num_comprobante) this.error_msj_ven.push('Ingrese el numero de comprobante');
+            if (!me.tipo_comprobante) me.error_msj_ven.push('Seleccione el comprobante');
 
-            if (!this.impuesto) this.error_msj_ven.push('Ingrese el impuesto de compra');
+            if (!me.num_comprobante) me.error_msj_ven.push('Ingrese el numero de comprobante');
 
-            if (this.array_detalle <= 0) this.error_msj_ven.push('Ingrese detalles');
+            if (!me.impuesto) me.error_msj_ven.push('Ingrese el impuesto de compra');
 
-            if (this.error_msj_ven.length) this.error_venta = 1;
+            if (me.array_detalle <= 0) me.error_msj_ven.push('Ingrese detalles');
 
-            return this.error_venta;
+            if (me.error_msj_ven.length) me.error_venta = 1;
+
+            return me.error_venta;
         },
         cerrarModal: function cerrarModal() {
             this.modal = 0;
@@ -47134,7 +47162,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this = this;
 
             swal({
-                title: '¿Estas seguro de anular este venta?',
+                title: '¿Estas seguro de anular esta venta?',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -47154,8 +47182,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         'id': id
                     }).then(function () {
                         me.listarVenta(1, '', 'num_comprobante');
-                        swal('Anulado', 'El venta ha sido desactivado', 'success');
-                    }).catch(function () {
+                        swal('Anulada', 'La venta ha sido desactivada', 'success');
+                    }).catch(function (error) {
                         console.log(error);
                     });
                 } else if (
@@ -48046,6 +48074,30 @@ var render = function() {
                                         ]),
                                         _vm._v(" "),
                                         _c("td", [
+                                          _c(
+                                            "span",
+                                            {
+                                              directives: [
+                                                {
+                                                  name: "show",
+                                                  rawName: "v-show",
+                                                  value:
+                                                    detalle.cantidad >
+                                                    detalle.stock,
+                                                  expression:
+                                                    "detalle.cantidad > detalle.stock"
+                                                }
+                                              ],
+                                              staticStyle: { color: "red" }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "Stock: " +
+                                                  _vm._s(detalle.stock)
+                                              )
+                                            ]
+                                          ),
+                                          _vm._v(" "),
                                           _c("input", {
                                             directives: [
                                               {
@@ -48076,6 +48128,26 @@ var render = function() {
                                         ]),
                                         _vm._v(" "),
                                         _c("td", [
+                                          _c(
+                                            "span",
+                                            {
+                                              directives: [
+                                                {
+                                                  name: "show",
+                                                  rawName: "v-show",
+                                                  value:
+                                                    detalle.descuento >
+                                                    detalle.precio_venta *
+                                                      detalle.cantidad,
+                                                  expression:
+                                                    "detalle.descuento > ( detalle.precio_venta * detalle.cantidad )"
+                                                }
+                                              ],
+                                              staticStyle: { color: "red" }
+                                            },
+                                            [_vm._v("Descuento superior")]
+                                          ),
+                                          _vm._v(" "),
                                           _c("input", {
                                             directives: [
                                               {
@@ -48110,7 +48182,8 @@ var render = function() {
                                             "\n                                        " +
                                               _vm._s(
                                                 detalle.precio_venta *
-                                                  detalle.cantidad
+                                                  detalle.cantidad -
+                                                  detalle.descuento
                                               ) +
                                               "\n                                    "
                                           )
@@ -48322,7 +48395,7 @@ var render = function() {
                                             _c("td", {
                                               domProps: {
                                                 textContent: _vm._s(
-                                                  detalle.precio_venta
+                                                  detalle.precio
                                                 )
                                               }
                                             }),
@@ -48335,12 +48408,21 @@ var render = function() {
                                               }
                                             }),
                                             _vm._v(" "),
+                                            _c("td", {
+                                              domProps: {
+                                                textContent: _vm._s(
+                                                  detalle.descuento
+                                                )
+                                              }
+                                            }),
+                                            _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
                                                 "\n                                        " +
                                                   _vm._s(
-                                                    detalle.precio_venta *
-                                                      detalle.cantidad
+                                                    detalle.precio *
+                                                      detalle.cantidad -
+                                                      detalle.descuento
                                                   ) +
                                                   "\n                                    "
                                               )
@@ -48699,39 +48781,7 @@ var render = function() {
                     }
                   },
                   [_vm._v("Cerrar")]
-                ),
-                _vm._v(" "),
-                _vm.tipo_accion == 1
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            _vm.registrarVenta()
-                          }
-                        }
-                      },
-                      [_vm._v("Guardar")]
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.tipo_accion == 2
-                  ? _c(
-                      "button",
-                      {
-                        staticClass: "btn btn-primary",
-                        attrs: { type: "button" },
-                        on: {
-                          click: function($event) {
-                            _vm.actualizarPersona()
-                          }
-                        }
-                      },
-                      [_vm._v("Actualizar")]
-                    )
-                  : _vm._e()
+                )
               ])
             ])
           ]
@@ -48848,6 +48898,8 @@ var staticRenderFns = [
       _vm._v(" "),
       _c("th", [_vm._v("Cantidad")]),
       _vm._v(" "),
+      _c("th", [_vm._v("Descuento")]),
+      _vm._v(" "),
       _c("th", [_vm._v("Subtotal")])
     ])
   },
@@ -48855,7 +48907,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Total Parcial:")])
     ])
   },
@@ -48863,7 +48915,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Total Impuesto:")])
     ])
   },
@@ -48871,7 +48923,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("td", { attrs: { colspan: "3", align: "right" } }, [
+    return _c("td", { attrs: { colspan: "4", align: "right" } }, [
       _c("strong", [_vm._v("Total Neto:")])
     ])
   },
@@ -48880,7 +48932,7 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("tr", [
-      _c("td", { attrs: { colspan: "4" } }, [
+      _c("td", { attrs: { colspan: "5" } }, [
         _vm._v(
           "\n                                        NO hay articulos agregados\n                                    "
         )
