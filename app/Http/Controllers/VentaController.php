@@ -67,7 +67,6 @@ class VentaController extends Controller
         ->take(1)
         ->get();
         
-
         return $venta;
     }
 
@@ -82,9 +81,36 @@ class VentaController extends Controller
         ->where('detalle_ventas.id_venta', '=', $id)
         ->orderBy('detalle_ventas.id', 'desc')
         ->get();
-        
 
         return $detalles;
+    }
+
+    public function pdf(Request $request, $id)
+    {
+        $venta =  Venta::join('personas', 'ventas.id_cliente', '=', 'personas.id')
+        ->join('users', 'ventas.id_usuario', '=', 'users.id')
+        ->select('ventas.id', 'ventas.tipo_comprobante', 'ventas.serie_comprobante',
+            'ventas.num_comprobante', 'ventas.fecha_hora', 'ventas.impuesto',
+            'ventas.total', 'ventas.estado', 'personas.nombre', 'personas.tipo_documento',
+            'personas.num_documento', 'personas.direccion', 'personas.email', 'personas.telefono', 'users.usuario')
+        ->where('ventas.id', '=', $id)
+        ->take(1)
+        ->get();
+
+        $detalles =  DetalleVenta::join('articulos', 'detalle_ventas.id_articulo', '=', 'articulos.id')
+        ->select('detalle_ventas.cantidad', 'detalle_ventas.precio', 'detalle_ventas.descuento', 'articulos.nombre as articulo')
+        ->where('detalle_ventas.id_venta', '=', $id)
+        ->orderBy('detalle_ventas.id', 'desc')
+        ->get();
+
+        $num_venta = Venta::select('num_comprobante')->where('id', $id)->get();
+
+        $pdf = \PDF::loadView('pdf.venta', [
+            'venta' => $venta,
+            'detalles' => $detalles
+        ]);
+
+        return $pdf->download('venta-'.$num_venta[0]->num_comprobante.'.pdf');
     }
 
     /**
@@ -130,6 +156,8 @@ class VentaController extends Controller
 	        }
 
             DB::commit();
+
+            return ['id' => $venta->id];
 
         } catch (Exception $e) {
 

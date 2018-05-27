@@ -91,6 +91,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::put('/venta/desactivar', 'VentaController@desactivar');
 		Route::get('venta/obtener-cabecera', 'VentaController@obtenerCabecera');
 		Route::get('venta/obtener-detalles', 'VentaController@obtenerDetalles');
+		Route::get('venta/pdf/{id}', 'VentaController@pdf')->name('venta_pdf');
 
 		/* Clientes */
 		Route::get('cliente', 'ClienteController@index');
@@ -144,6 +145,7 @@ Route::group( ['middleware' => ['auth'] ], function(){
 		Route::put('/venta/desactivar', 'VentaController@desactivar');
 		Route::get('venta/obtener-cabecera', 'VentaController@obtenerCabecera');
 		Route::get('venta/obtener-detalles', 'VentaController@obtenerDetalles');
+		Route::get('venta/pdf/{id}', 'VentaController@pdf')->name('venta_pdf');
 
 		/* Clientes */
 		Route::get('cliente', 'ClienteController@index');

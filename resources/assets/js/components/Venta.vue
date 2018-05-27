@@ -56,6 +56,9 @@
                                         <button v-on:click="verVenta(venta.id)" type="button" class="btn btn-success btn-sm">
                                           <i class="icon-eye"></i>
                                         </button>
+                                        <button v-on:click="pdfVenta(venta.id)" type="button" class="btn btn-info btn-sm">
+                                          <i class="icon-doc"></i>
+                                        </button>
                                         <template v-if="venta.estado == 'Registrado'">
                                             <button type="button" class="btn btn-danger btn-sm" v-on:click="desactivarVenta(venta.id)">
                                                 <i class="icon-trash"></i>
@@ -560,6 +563,9 @@
                     console.log(error);
                 });
             },
+            pdfVenta (id){
+                window.open('http://127.0.0.1:8000/venta/pdf/' + id, '_blank');
+            },
             cambiarPagina (page, buscar, criterio){
                 let me = this;
                 //actualiza la pagina actual
@@ -685,7 +691,7 @@
                     'total': this.total,
                     'data': this.array_detalle
 
-                }).then(function (){
+                }).then(function (response){
 
                     me.listado = 1;
                     me.listarVenta(1, '', 'num_comprobante');
@@ -702,6 +708,7 @@
                     me.descuento = 0;
                     me.stock = 0;
                     me.array_detalle = [];
+                    window.open('http://127.0.0.1:8000/venta/pdf/' + response.data.id, '_blank');
                 })
                 .catch(function (error){
                     console.log(error);
@@ -811,7 +818,7 @@
 
                     axios.put('/venta/desactivar', {
                         'id': id
-                    }).then(function (){
+                    }).then(function (response){
                         me.listarVenta(1, '', 'num_comprobante');
                         swal(
                           'Anulada',

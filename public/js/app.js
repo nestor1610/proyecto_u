@@ -46817,6 +46817,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -46961,6 +46964,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(error);
             });
         },
+        pdfVenta: function pdfVenta(id) {
+            window.open('http://127.0.0.1:8000/venta/pdf/' + id, '_blank');
+        },
         cambiarPagina: function cambiarPagina(page, buscar, criterio) {
             var me = this;
             //actualiza la pagina actual
@@ -47077,7 +47083,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'total': this.total,
                 'data': this.array_detalle
 
-            }).then(function () {
+            }).then(function (response) {
 
                 me.listado = 1;
                 me.listarVenta(1, '', 'num_comprobante');
@@ -47094,6 +47100,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 me.descuento = 0;
                 me.stock = 0;
                 me.array_detalle = [];
+                window.open('http://127.0.0.1:8000/venta/pdf/' + response.data.id, '_blank');
             }).catch(function (error) {
                 console.log(error);
             });
@@ -47203,7 +47210,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                     axios.put('/venta/desactivar', {
                         'id': id
-                    }).then(function () {
+                    }).then(function (response) {
                         me.listarVenta(1, '', 'num_comprobante');
                         swal('Anulada', 'La venta ha sido desactivada', 'success');
                     }).catch(function (error) {
@@ -47421,6 +47428,20 @@ var render = function() {
                                       }
                                     },
                                     [_c("i", { staticClass: "icon-eye" })]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-info btn-sm",
+                                      attrs: { type: "button" },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.pdfVenta(venta.id)
+                                        }
+                                      }
+                                    },
+                                    [_c("i", { staticClass: "icon-doc" })]
                                   ),
                                   _vm._v(" "),
                                   venta.estado == "Registrado"
