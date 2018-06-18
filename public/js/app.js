@@ -35558,10 +35558,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'stock': this.stock,
                 'precio_venta': this.precio,
                 'descripcion': this.descripcion
-            }).then(function () {
+            }).then(function (response) {
                 me.cerrarModal();
                 me.listarArticulo(1, '', 'nombre');
-            }).catch(function () {
+            }).catch(function (error) {
                 console.log(error);
             });
         },
@@ -35581,10 +35581,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 'precio_venta': this.precio,
                 'descripcion': this.descripcion,
                 'id': this.id_articulo
-            }).then(function () {
+            }).then(function (response) {
                 me.cerrarModal();
                 me.listarArticulo(1, '', 'nombre');
-            }).catch(function () {
+            }).catch(function (error) {
                 console.log(error);
             });
         },
@@ -35610,10 +35610,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                     axios.put('/articulo/desactivar', {
                         'id': id_articulo
-                    }).then(function () {
+                    }).then(function (response) {
                         me.listarArticulo(1, '', 'nombre');
                         swal('Desactivada', 'El articulo ha sido desactivado', 'success');
-                    }).catch(function () {
+                    }).catch(function (error) {
                         console.log(error);
                     });
                 } else if (
@@ -35643,10 +35643,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                     axios.put('/articulo/activar', {
                         'id': id_articulo
-                    }).then(function () {
+                    }).then(function (response) {
                         me.listarArticulo(1, '', 'nombre');
                         swal('Activada', 'El articulo ha sido activado', 'success');
-                    }).catch(function () {
+                    }).catch(function (error) {
                         console.log(error);
                     });
                 } else if (

@@ -289,11 +289,11 @@
                     'stock' : this.stock,
                     'precio_venta' : this.precio,
                     'descripcion' : this.descripcion
-                }).then(function (){
+                }).then(function (response){
                     me.cerrarModal();
                     me.listarArticulo(1, '', 'nombre');
                 })
-                .catch(function (){
+                .catch(function (error){
                     console.log(error);
                 });
             },
@@ -313,11 +313,11 @@
                     'precio_venta' : this.precio,
                     'descripcion' : this.descripcion,
                     'id': this.id_articulo
-                }).then(function (){
+                }).then(function (response){
                     me.cerrarModal();
                     me.listarArticulo(1, '', 'nombre');
                 })
-                .catch(function (){
+                .catch(function (error){
                     console.log(error);
                 });
             },
@@ -341,7 +341,7 @@
 
                     axios.put('/articulo/desactivar', {
                         'id': id_articulo
-                    }).then(function (){
+                    }).then(function (response){
                         me.listarArticulo(1, '', 'nombre');
                         swal(
                           'Desactivada',
@@ -349,7 +349,7 @@
                           'success'
                         )
                     })
-                    .catch(function (){
+                    .catch(function (error){
                         console.log(error);
                     });
 
@@ -381,7 +381,7 @@
 
                     axios.put('/articulo/activar', {
                         'id': id_articulo
-                    }).then(function (){
+                    }).then(function (response){
                         me.listarArticulo(1, '', 'nombre');
                         swal(
                           'Activada',
@@ -389,7 +389,7 @@
                           'success'
                         )
                     })
-                    .catch(function (){
+                    .catch(function (error){
                         console.log(error);
                     });
 

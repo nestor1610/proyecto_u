@@ -70,6 +70,8 @@ class ArticuloController extends Controller
                 'articulos.descripcion', 'articulos.condicion')
             ->orderBy('articulos.id', 'desc')->paginate(10);
         }
+
+        return $articulos;
     }
 
     public function listarArticuloVenta(Request $request)
