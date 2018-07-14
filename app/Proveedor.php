@@ -6,20 +6,20 @@ use Illuminate\Database\Eloquent\Model;
 
 class Proveedor extends Model
 {
-    protected $table = 'proveedores';
-    protected $fillable = [
-    	'id', 'contacto', 'telefono_contacto'
-    ];
+	protected $table = 'proveedores';
+	protected $fillable = [
+		'id', 'contacto', 'telefono_contacto'
+	];
 
-    public $timestamps = false;
+	public $timestamps = false;
 
-    public function persona()
-    {
-    	return $this->belongsTo('App\Persona', 'id');
-    }
+	public function persona()
+	{
+		return $this->belongsTo('App\Persona', 'id');
+	}
 
-    public function ingresos()
-    {
-        return $this->hasMany('App\Ingreso', 'id_proveedor');
-    }
+	public function ingresos()
+	{
+		return $this->hasMany('App\Ingreso', 'id_proveedor');
+	}
 }

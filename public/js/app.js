@@ -2391,6 +2391,7 @@ Vue.component('rol', __webpack_require__(111));
 Vue.component('user', __webpack_require__(116));
 Vue.component('ingreso', __webpack_require__(121));
 Vue.component('venta', __webpack_require__(126));
+Vue.component('dashboard', __webpack_require__(131));
 
 var app = new Vue({
   el: '#app',
@@ -34176,7 +34177,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -34356,238 +34357,238 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            categoria_id: 0,
-            nombre: '',
-            descripcion: '',
-            array_categoria: [],
-            modal: 0,
-            titulo_modal: '',
-            tipo_accion: 0,
-            error_categoria: 0,
-            error_msj_cat: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'nombre',
-            buscar: ''
-        };
-    },
+	data: function data() {
+		return {
+			categoria_id: 0,
+			nombre: '',
+			descripcion: '',
+			array_categoria: [],
+			modal: 0,
+			titulo_modal: '',
+			tipo_accion: 0,
+			error_categoria: 0,
+			error_msj_cat: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'nombre',
+			buscar: ''
+		};
+	},
 
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        }
-    },
-    methods: {
-        listarCategoria: function listarCategoria(page, buscar, criterio) {
-            var me = this;
-            var url = '/categoria?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return page_array;
+		}
+	},
+	methods: {
+		listarCategoria: function listarCategoria(page, buscar, criterio) {
+			var me = this;
+			var url = '/categoria?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_categoria = respuesta.categorias.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarCategoria(page, buscar, criterio);
-        },
-        registrarCategoria: function registrarCategoria() {
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_categoria = respuesta.categorias.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarCategoria(page, buscar, criterio);
+		},
+		registrarCategoria: function registrarCategoria() {
 
-            if (this.validarCategoria()) {
-                return;
-            }
+			if (this.validarCategoria()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.post('/categoria/registrar', {
-                'nombre': this.nombre,
-                'descripcion': this.descripcion
-            }).then(function () {
-                me.cerrarModal();
-                me.listarCategoria(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        actualizarCategoria: function actualizarCategoria() {
+			axios.post('/categoria/registrar', {
+				'nombre': this.nombre,
+				'descripcion': this.descripcion
+			}).then(function () {
+				me.cerrarModal();
+				me.listarCategoria(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		actualizarCategoria: function actualizarCategoria() {
 
-            if (this.validarCategoria()) {
-                return;
-            }
+			if (this.validarCategoria()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.put('/categoria/actualizar', {
-                'nombre': this.nombre,
-                'descripcion': this.descripcion,
-                'id': this.categoria_id
-            }).then(function () {
-                me.cerrarModal();
-                me.listarCategoria(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        desactivarCategoria: function desactivarCategoria(categoria_id) {
-            var _this = this;
+			axios.put('/categoria/actualizar', {
+				'nombre': this.nombre,
+				'descripcion': this.descripcion,
+				'id': this.categoria_id
+			}).then(function () {
+				me.cerrarModal();
+				me.listarCategoria(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		desactivarCategoria: function desactivarCategoria(categoria_id) {
+			var _this = this;
 
-            swal({
-                title: '¿Estas seguro de desactivar esta categoria?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro de desactivar esta categoria?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this;
+					var me = _this;
 
-                    axios.put('/categoria/desactivar', {
-                        'id': categoria_id
-                    }).then(function () {
-                        me.listarCategoria(1, '', 'nombre');
-                        swal('Desactivada', 'La categoria ha sido desactivada', 'success');
-                    }).catch(function () {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        activarCategoria: function activarCategoria(categoria_id) {
-            var _this2 = this;
+					axios.put('/categoria/desactivar', {
+						'id': categoria_id
+					}).then(function () {
+						me.listarCategoria(1, '', 'nombre');
+						swal('Desactivada', 'La categoria ha sido desactivada', 'success');
+					}).catch(function () {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		activarCategoria: function activarCategoria(categoria_id) {
+			var _this2 = this;
 
-            swal({
-                title: '¿Estas seguro activar esta categoria?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro activar esta categoria?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this2;
+					var me = _this2;
 
-                    axios.put('/categoria/activar', {
-                        'id': categoria_id
-                    }).then(function () {
-                        me.listarCategoria(1, '', 'nombre');
-                        swal('Activada', 'La categoria ha sido activada', 'success');
-                    }).catch(function () {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        validarCategoria: function validarCategoria() {
-            this.error_categoria = 0;
-            this.error_msj_cat = [];
+					axios.put('/categoria/activar', {
+						'id': categoria_id
+					}).then(function () {
+						me.listarCategoria(1, '', 'nombre');
+						swal('Activada', 'La categoria ha sido activada', 'success');
+					}).catch(function () {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		validarCategoria: function validarCategoria() {
+			this.error_categoria = 0;
+			this.error_msj_cat = [];
 
-            if (!this.nombre) this.error_msj_cat.push('El nombre de la categoria no puede estar vacio');
+			if (!this.nombre) this.error_msj_cat.push('El nombre de la categoria no puede estar vacio');
 
-            if (this.error_msj_cat.length) this.error_categoria = 1;
+			if (this.error_msj_cat.length) this.error_categoria = 1;
 
-            return this.error_categoria;
-        },
-        cerrarModal: function cerrarModal() {
-            this.modal = 0;
-            this.titulo_modal = '';
-            this.categoria_id = 0;
-            this.nombre = '';
-            this.descripcion = '';
-        },
-        abrirModal: function abrirModal(modelo, accion) {
-            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+			return this.error_categoria;
+		},
+		cerrarModal: function cerrarModal() {
+			this.modal = 0;
+			this.titulo_modal = '';
+			this.categoria_id = 0;
+			this.nombre = '';
+			this.descripcion = '';
+		},
+		abrirModal: function abrirModal(modelo, accion) {
+			var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
-            switch (modelo) {
-                case "categoria":
-                    {
-                        switch (accion) {
-                            case "registrar":
-                                {
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Registrar Categoria', this.nombre = '';
-                                    this.descripcion = '';
-                                    this.tipo_accion = 1;
-                                    break;
-                                }
-                            case "actualizar":
-                                {
-                                    //console.log(data);
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Actualizar categoria';
-                                    this.tipo_accion = 2;
-                                    this.categoria_id = data['id'];
-                                    this.nombre = data['nombre'];
-                                    this.descripcion = data['descripcion'];
-                                    break;
-                                }
-                        }
-                    }
-            }
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'nombre';
-            this.listarCategoria(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarCategoria(1, this.buscar, this.criterio);
-    }
+			switch (modelo) {
+				case "categoria":
+					{
+						switch (accion) {
+							case "registrar":
+								{
+									this.modal = 1;
+									this.titulo_modal = 'Registrar Categoria', this.nombre = '';
+									this.descripcion = '';
+									this.tipo_accion = 1;
+									break;
+								}
+							case "actualizar":
+								{
+									//console.log(data);
+									this.modal = 1;
+									this.titulo_modal = 'Actualizar categoria';
+									this.tipo_accion = 2;
+									this.categoria_id = data['id'];
+									this.nombre = data['nombre'];
+									this.descripcion = data['descripcion'];
+									break;
+								}
+						}
+					}
+			}
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'nombre';
+			this.listarCategoria(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarCategoria(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -34605,7 +34606,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Categorías\n            "),
+          _vm._v(" Categorías\n\t\t\t"),
           _c(
             "button",
             {
@@ -34617,10 +34618,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n            ")
-            ]
+            [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n\t\t\t")]
           )
         ]),
         _vm._v(" "),
@@ -34725,7 +34723,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "icon-trash" }),
-                    _vm._v(" Limpiar\n                        ")
+                    _vm._v(" Limpiar\n\t\t\t\t\t\t")
                   ]
                 )
               ])
@@ -34762,7 +34760,7 @@ var render = function() {
                           },
                           [_c("i", { staticClass: "icon-pencil" })]
                         ),
-                        _vm._v("  \n                            "),
+                        _vm._v("  \n\t\t\t\t\t\t\t"),
                         categoria.condicion
                           ? [
                               _c(
@@ -35253,7 +35251,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -35449,291 +35447,291 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            id_categoria: 0,
-            id_articulo: 0,
-            nombre_categoria: '',
-            codigo: '',
-            nombre: '',
-            precio: 0,
-            stock: 0,
-            descripcion: '',
-            array_categoria: [],
-            array_articulo: [],
-            modal: 0,
-            titulo_modal: '',
-            tipo_accion: 0,
-            error_articulo: 0,
-            error_msj_art: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'articulos.nombre',
-            buscar: ''
-        };
-    },
+	data: function data() {
+		return {
+			id_categoria: 0,
+			id_articulo: 0,
+			nombre_categoria: '',
+			codigo: '',
+			nombre: '',
+			precio: 0,
+			stock: 0,
+			descripcion: '',
+			array_categoria: [],
+			array_articulo: [],
+			modal: 0,
+			titulo_modal: '',
+			tipo_accion: 0,
+			error_articulo: 0,
+			error_msj_art: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'articulos.nombre',
+			buscar: ''
+		};
+	},
 
-    components: {
-        'barcode': __WEBPACK_IMPORTED_MODULE_0_vue_barcode___default.a
-    },
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	components: {
+		'barcode': __WEBPACK_IMPORTED_MODULE_0_vue_barcode___default.a
+	},
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        }
-    },
-    methods: {
-        listarArticulo: function listarArticulo(page, buscar, criterio) {
-            var me = this;
-            var url = '/articulo?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return page_array;
+		}
+	},
+	methods: {
+		listarArticulo: function listarArticulo(page, buscar, criterio) {
+			var me = this;
+			var url = '/articulo?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_articulo = respuesta.articulos.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cargarPdf: function cargarPdf() {
-            window.open('http://127.0.0.1:8000/articulo/listarPdf', '_blank');
-        },
-        listarCategoria: function listarCategoria() {
-            var me = this;
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_articulo = respuesta.articulos.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cargarPdf: function cargarPdf() {
+			window.open('http://127.0.0.1:8000/articulo/listarPdf', '_blank');
+		},
+		listarCategoria: function listarCategoria() {
+			var me = this;
 
-            axios.get('/articulo/listar-categorias').then(function (response) {
-                me.array_categoria = response.data;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarArticulo(page, buscar, criterio);
-        },
-        registrarArticulo: function registrarArticulo() {
+			axios.get('/articulo/listar-categorias').then(function (response) {
+				me.array_categoria = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarArticulo(page, buscar, criterio);
+		},
+		registrarArticulo: function registrarArticulo() {
 
-            if (this.validarArticulo()) {
-                return;
-            }
+			if (this.validarArticulo()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.post('/articulo/registrar', {
-                'id_categoria': this.id_categoria,
-                'codigo': this.codigo,
-                'nombre': this.nombre,
-                'stock': this.stock,
-                'precio_venta': this.precio,
-                'descripcion': this.descripcion
-            }).then(function (response) {
-                me.cerrarModal();
-                me.listarArticulo(1, '', 'nombre');
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        actualizarArticulo: function actualizarArticulo() {
+			axios.post('/articulo/registrar', {
+				'id_categoria': this.id_categoria,
+				'codigo': this.codigo,
+				'nombre': this.nombre,
+				'stock': this.stock,
+				'precio_venta': this.precio,
+				'descripcion': this.descripcion
+			}).then(function (response) {
+				me.cerrarModal();
+				me.listarArticulo(1, '', 'nombre');
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		actualizarArticulo: function actualizarArticulo() {
 
-            if (this.validarArticulo()) {
-                return;
-            }
+			if (this.validarArticulo()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.put('/articulo/actualizar', {
-                'id_categoria': this.id_categoria,
-                'codigo': this.codigo,
-                'nombre': this.nombre,
-                'stock': this.stock,
-                'precio_venta': this.precio,
-                'descripcion': this.descripcion,
-                'id': this.id_articulo
-            }).then(function (response) {
-                me.cerrarModal();
-                me.listarArticulo(1, '', 'nombre');
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        desactivarArticulo: function desactivarArticulo(id_articulo) {
-            var _this = this;
+			axios.put('/articulo/actualizar', {
+				'id_categoria': this.id_categoria,
+				'codigo': this.codigo,
+				'nombre': this.nombre,
+				'stock': this.stock,
+				'precio_venta': this.precio,
+				'descripcion': this.descripcion,
+				'id': this.id_articulo
+			}).then(function (response) {
+				me.cerrarModal();
+				me.listarArticulo(1, '', 'nombre');
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		desactivarArticulo: function desactivarArticulo(id_articulo) {
+			var _this = this;
 
-            swal({
-                title: '¿Estas seguro de desactivar este articulo?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro de desactivar este articulo?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this;
+					var me = _this;
 
-                    axios.put('/articulo/desactivar', {
-                        'id': id_articulo
-                    }).then(function (response) {
-                        me.listarArticulo(1, '', 'nombre');
-                        swal('Desactivada', 'El articulo ha sido desactivado', 'success');
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        activarArticulo: function activarArticulo(id_articulo) {
-            var _this2 = this;
+					axios.put('/articulo/desactivar', {
+						'id': id_articulo
+					}).then(function (response) {
+						me.listarArticulo(1, '', 'nombre');
+						swal('Desactivada', 'El articulo ha sido desactivado', 'success');
+					}).catch(function (error) {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		activarArticulo: function activarArticulo(id_articulo) {
+			var _this2 = this;
 
-            swal({
-                title: '¿Estas seguro activar este articulo?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro activar este articulo?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this2;
+					var me = _this2;
 
-                    axios.put('/articulo/activar', {
-                        'id': id_articulo
-                    }).then(function (response) {
-                        me.listarArticulo(1, '', 'nombre');
-                        swal('Activada', 'El articulo ha sido activado', 'success');
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        validarArticulo: function validarArticulo() {
-            this.error_articulo = 0;
-            this.error_msj_art = [];
+					axios.put('/articulo/activar', {
+						'id': id_articulo
+					}).then(function (response) {
+						me.listarArticulo(1, '', 'nombre');
+						swal('Activada', 'El articulo ha sido activado', 'success');
+					}).catch(function (error) {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		validarArticulo: function validarArticulo() {
+			this.error_articulo = 0;
+			this.error_msj_art = [];
 
-            if (!this.id_categoria) this.error_msj_art.push('Seleccione una categoria');
+			if (!this.id_categoria) this.error_msj_art.push('Seleccione una categoria');
 
-            if (!this.nombre) this.error_msj_art.push('El nombre del articulo no puede estar vacio');
+			if (!this.nombre) this.error_msj_art.push('El nombre del articulo no puede estar vacio');
 
-            if (!this.stock) this.error_msj_art.push('El stock del articulo no puede estar vacio');
+			if (!this.stock) this.error_msj_art.push('El stock del articulo no puede estar vacio');
 
-            if (!this.precio) this.error_msj_art.push('El precio de venta del articulo debe ser un numero y no puede estar vacio');
+			if (!this.precio) this.error_msj_art.push('El precio de venta del articulo debe ser un numero y no puede estar vacio');
 
-            if (this.error_msj_art.length) this.error_articulo = 1;
+			if (this.error_msj_art.length) this.error_articulo = 1;
 
-            return this.error_articulo;
-        },
-        cerrarModal: function cerrarModal() {
-            this.modal = 0;
-            this.titulo_modal = '';
-            this.id_categoria = 0;
-            this.id_articulo = 0;
-            this.nombre_categoria = 0;
-            this.codigo = '';
-            this.nombre = '';
-            this.precio = 0;
-            this.stock = 0;
-            this.descripcion = '';
-            this.array_categoria = [];
-            this.error_articulo = 0;
-            this.error_msj_art = [];
-        },
-        abrirModal: function abrirModal(modelo, accion) {
-            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+			return this.error_articulo;
+		},
+		cerrarModal: function cerrarModal() {
+			this.modal = 0;
+			this.titulo_modal = '';
+			this.id_categoria = 0;
+			this.id_articulo = 0;
+			this.nombre_categoria = 0;
+			this.codigo = '';
+			this.nombre = '';
+			this.precio = 0;
+			this.stock = 0;
+			this.descripcion = '';
+			this.array_categoria = [];
+			this.error_articulo = 0;
+			this.error_msj_art = [];
+		},
+		abrirModal: function abrirModal(modelo, accion) {
+			var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
-            switch (modelo) {
-                case "articulo":
-                    {
-                        switch (accion) {
-                            case "registrar":
-                                {
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Registrar Articulo', this.listarCategoria();
-                                    this.id_categoria = 0;
-                                    this.codigo = '';
-                                    this.nombre = '';
-                                    this.precio = 0;
-                                    this.stock = 0;
-                                    this.descripcion = '';
-                                    this.tipo_accion = 1;
-                                    break;
-                                }
-                            case "actualizar":
-                                {
-                                    //console.log(data);
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Actualizar Articulo';
-                                    this.tipo_accion = 2;
-                                    this.listarCategoria();
-                                    this.id_categoria = data['id_categoria'];
-                                    this.id_articulo = data['id'];
-                                    this.codigo = data['codigo'];
-                                    this.nombre = data['nombre'];
-                                    this.precio = data['precio_venta'];
-                                    this.stock = data['stock'];
-                                    this.descripcion = data['descripcion'];
-                                    break;
-                                }
-                        }
-                    }
-            }
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'articulos.nombre';
-            this.listarArticulo(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarArticulo(1, this.buscar, this.criterio);
-    }
+			switch (modelo) {
+				case "articulo":
+					{
+						switch (accion) {
+							case "registrar":
+								{
+									this.modal = 1;
+									this.titulo_modal = 'Registrar Articulo', this.listarCategoria();
+									this.id_categoria = 0;
+									this.codigo = '';
+									this.nombre = '';
+									this.precio = 0;
+									this.stock = 0;
+									this.descripcion = '';
+									this.tipo_accion = 1;
+									break;
+								}
+							case "actualizar":
+								{
+									//console.log(data);
+									this.modal = 1;
+									this.titulo_modal = 'Actualizar Articulo';
+									this.tipo_accion = 2;
+									this.listarCategoria();
+									this.id_categoria = data['id_categoria'];
+									this.id_articulo = data['id'];
+									this.codigo = data['codigo'];
+									this.nombre = data['nombre'];
+									this.precio = data['precio_venta'];
+									this.stock = data['stock'];
+									this.descripcion = data['descripcion'];
+									break;
+								}
+						}
+					}
+			}
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'articulos.nombre';
+			this.listarArticulo(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarArticulo(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -38490,7 +38488,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Articulos\n            "),
+          _vm._v(" Articulos\n\t\t\t"),
           _c(
             "button",
             {
@@ -38502,10 +38500,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n            ")
-            ]
+            [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n\t\t\t")]
           ),
           _vm._v(" "),
           _c(
@@ -38519,10 +38514,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _c("i", { staticClass: "icon-doc" }),
-              _vm._v(" Reporte\n            ")
-            ]
+            [_c("i", { staticClass: "icon-doc" }), _vm._v(" Reporte\n\t\t\t")]
           )
         ]),
         _vm._v(" "),
@@ -38633,7 +38625,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "icon-trash" }),
-                    _vm._v(" Limpiar\n                        ")
+                    _vm._v(" Limpiar\n\t\t\t\t\t\t")
                   ]
                 )
               ])
@@ -38670,7 +38662,7 @@ var render = function() {
                           },
                           [_c("i", { staticClass: "icon-pencil" })]
                         ),
-                        _vm._v("  \n                            "),
+                        _vm._v("  \n\t\t\t\t\t\t\t"),
                         articulo.condicion
                           ? [
                               _c(
@@ -39002,7 +38994,7 @@ var render = function() {
                             },
                             [
                               _vm._v(
-                                "\n                                Generando codigo de barras.\n                            "
+                                "\n\t\t\t\t\t\t\t\tGenerando codigo de barras.\n\t\t\t\t\t\t\t"
                               )
                             ]
                           )
@@ -39376,7 +39368,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -39542,197 +39534,197 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            persona_id: 0,
-            nombre: '',
-            tipo_documento: 'CI',
-            num_documento: '',
-            direccion: '',
-            telefono: '',
-            email: '',
-            array_persona: [],
-            modal: 0,
-            titulo_modal: '',
-            tipo_accion: 0,
-            error_persona: 0,
-            error_msj_per: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'nombre',
-            buscar: ''
-        };
-    },
+	data: function data() {
+		return {
+			persona_id: 0,
+			nombre: '',
+			tipo_documento: 'CI',
+			num_documento: '',
+			direccion: '',
+			telefono: '',
+			email: '',
+			array_persona: [],
+			modal: 0,
+			titulo_modal: '',
+			tipo_accion: 0,
+			error_persona: 0,
+			error_msj_per: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'nombre',
+			buscar: ''
+		};
+	},
 
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        }
-    },
-    methods: {
-        listarPersona: function listarPersona(page, buscar, criterio) {
-            var me = this;
-            var url = '/cliente?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return page_array;
+		}
+	},
+	methods: {
+		listarPersona: function listarPersona(page, buscar, criterio) {
+			var me = this;
+			var url = '/cliente?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_persona = respuesta.personas.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarPersona(page, buscar, criterio);
-        },
-        registrarPersona: function registrarPersona() {
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_persona = respuesta.personas.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarPersona(page, buscar, criterio);
+		},
+		registrarPersona: function registrarPersona() {
 
-            if (this.validarPersona()) {
-                return;
-            }
+			if (this.validarPersona()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.post('/cliente/registrar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email
-            }).then(function () {
-                me.cerrarModal();
-                me.listarPersona(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        actualizarPersona: function actualizarPersona() {
+			axios.post('/cliente/registrar', {
+				'nombre': this.nombre,
+				'tipo_documento': this.tipo_documento,
+				'num_documento': this.num_documento,
+				'direccion': this.direccion,
+				'telefono': this.telefono,
+				'email': this.email
+			}).then(function () {
+				me.cerrarModal();
+				me.listarPersona(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		actualizarPersona: function actualizarPersona() {
 
-            if (this.validarPersona()) {
-                return;
-            }
+			if (this.validarPersona()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.put('/cliente/actualizar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email,
-                'id': this.persona_id
-            }).then(function () {
-                me.cerrarModal();
-                me.listarPersona(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        validarPersona: function validarPersona() {
-            this.error_persona = 0;
-            this.error_msj_per = [];
+			axios.put('/cliente/actualizar', {
+				'nombre': this.nombre,
+				'tipo_documento': this.tipo_documento,
+				'num_documento': this.num_documento,
+				'direccion': this.direccion,
+				'telefono': this.telefono,
+				'email': this.email,
+				'id': this.persona_id
+			}).then(function () {
+				me.cerrarModal();
+				me.listarPersona(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		validarPersona: function validarPersona() {
+			this.error_persona = 0;
+			this.error_msj_per = [];
 
-            if (!this.nombre) this.error_msj_per.push('El nombre de la persona no puede estar vacio');
+			if (!this.nombre) this.error_msj_per.push('El nombre de la persona no puede estar vacio');
 
-            if (this.error_msj_per.length) this.error_persona = 1;
+			if (this.error_msj_per.length) this.error_persona = 1;
 
-            return this.error_persona;
-        },
-        cerrarModal: function cerrarModal() {
-            this.modal = 0;
-            this.titulo_modal = '';
-            this.persona_id = 0;
-            this.nombre = '';
-            this.tipo_documento = 'CI';
-            this.num_documento = '';
-            this.direccion = '';
-            this.telefono = '';
-            this.email = '';
-            this.error_persona = 0;
-        },
-        abrirModal: function abrirModal(modelo, accion) {
-            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+			return this.error_persona;
+		},
+		cerrarModal: function cerrarModal() {
+			this.modal = 0;
+			this.titulo_modal = '';
+			this.persona_id = 0;
+			this.nombre = '';
+			this.tipo_documento = 'CI';
+			this.num_documento = '';
+			this.direccion = '';
+			this.telefono = '';
+			this.email = '';
+			this.error_persona = 0;
+		},
+		abrirModal: function abrirModal(modelo, accion) {
+			var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
-            switch (modelo) {
-                case "persona":
-                    {
-                        switch (accion) {
-                            case "registrar":
-                                {
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Registrar Cliente', this.nombre = '';
-                                    this.tipo_documento = 'CI';
-                                    this.num_documento = '';
-                                    this.direccion = '';
-                                    this.telefono = '';
-                                    this.email = '';
-                                    this.tipo_accion = 1;
-                                    break;
-                                }
-                            case "actualizar":
-                                {
-                                    //console.log(data);
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Actualizar Cliente';
-                                    this.tipo_accion = 2;
-                                    this.persona_id = data['id'];
-                                    this.nombre = data['nombre'];
-                                    this.tipo_documento = data['tipo_documento'];
-                                    this.num_documento = data['num_documento'];
-                                    this.direccion = data['direccion'];
-                                    this.telefono = data['telefono'];
-                                    this.email = data['email'];
-                                    break;
-                                }
-                        }
-                    }
-            }
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'nombre';
-            this.listarPersona(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarPersona(1, this.buscar, this.criterio);
-    }
+			switch (modelo) {
+				case "persona":
+					{
+						switch (accion) {
+							case "registrar":
+								{
+									this.modal = 1;
+									this.titulo_modal = 'Registrar Cliente', this.nombre = '';
+									this.tipo_documento = 'CI';
+									this.num_documento = '';
+									this.direccion = '';
+									this.telefono = '';
+									this.email = '';
+									this.tipo_accion = 1;
+									break;
+								}
+							case "actualizar":
+								{
+									//console.log(data);
+									this.modal = 1;
+									this.titulo_modal = 'Actualizar Cliente';
+									this.tipo_accion = 2;
+									this.persona_id = data['id'];
+									this.nombre = data['nombre'];
+									this.tipo_documento = data['tipo_documento'];
+									this.num_documento = data['num_documento'];
+									this.direccion = data['direccion'];
+									this.telefono = data['telefono'];
+									this.email = data['email'];
+									break;
+								}
+						}
+					}
+			}
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'nombre';
+			this.listarPersona(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarPersona(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -39750,7 +39742,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Clientes\n            "),
+          _vm._v(" Clientes\n\t\t\t"),
           _c(
             "button",
             {
@@ -39762,10 +39754,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n            ")
-            ]
+            [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n\t\t\t")]
           )
         ]),
         _vm._v(" "),
@@ -39878,7 +39867,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "icon-trash" }),
-                    _vm._v(" Limpiar\n                        ")
+                    _vm._v(" Limpiar\n\t\t\t\t\t\t")
                   ]
                 )
               ])
@@ -40535,7 +40524,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -40715,209 +40704,209 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            persona_id: 0,
-            nombre: '',
-            tipo_documento: 'RIF',
-            num_documento: '',
-            direccion: '',
-            telefono: '',
-            email: '',
-            contacto: '',
-            telefono_contacto: '',
-            array_persona: [],
-            modal: 0,
-            titulo_modal: '',
-            tipo_accion: 0,
-            error_persona: 0,
-            error_msj_per: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'nombre',
-            buscar: ''
-        };
-    },
+	data: function data() {
+		return {
+			persona_id: 0,
+			nombre: '',
+			tipo_documento: 'RIF',
+			num_documento: '',
+			direccion: '',
+			telefono: '',
+			email: '',
+			contacto: '',
+			telefono_contacto: '',
+			array_persona: [],
+			modal: 0,
+			titulo_modal: '',
+			tipo_accion: 0,
+			error_persona: 0,
+			error_msj_per: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'nombre',
+			buscar: ''
+		};
+	},
 
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        }
-    },
-    methods: {
-        listarPersona: function listarPersona(page, buscar, criterio) {
-            var me = this;
-            var url = '/proveedor?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return page_array;
+		}
+	},
+	methods: {
+		listarPersona: function listarPersona(page, buscar, criterio) {
+			var me = this;
+			var url = '/proveedor?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_persona = respuesta.personas.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarPersona(page, buscar, criterio);
-        },
-        registrarPersona: function registrarPersona() {
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_persona = respuesta.personas.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarPersona(page, buscar, criterio);
+		},
+		registrarPersona: function registrarPersona() {
 
-            if (this.validarPersona()) {
-                return;
-            }
+			if (this.validarPersona()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.post('/proveedor/registrar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email,
-                'contacto': this.contacto,
-                'telefono_contacto': this.telefono_contacto
-            }).then(function () {
-                me.cerrarModal();
-                me.listarPersona(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        actualizarPersona: function actualizarPersona() {
+			axios.post('/proveedor/registrar', {
+				'nombre': this.nombre,
+				'tipo_documento': this.tipo_documento,
+				'num_documento': this.num_documento,
+				'direccion': this.direccion,
+				'telefono': this.telefono,
+				'email': this.email,
+				'contacto': this.contacto,
+				'telefono_contacto': this.telefono_contacto
+			}).then(function () {
+				me.cerrarModal();
+				me.listarPersona(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		actualizarPersona: function actualizarPersona() {
 
-            if (this.validarPersona()) {
-                return;
-            }
+			if (this.validarPersona()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.put('/proveedor/actualizar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email,
-                'contacto': this.contacto,
-                'telefono_contacto': this.telefono_contacto,
-                'id': this.persona_id
-            }).then(function () {
-                me.cerrarModal();
-                me.listarPersona(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        validarPersona: function validarPersona() {
-            this.error_persona = 0;
-            this.error_msj_per = [];
+			axios.put('/proveedor/actualizar', {
+				'nombre': this.nombre,
+				'tipo_documento': this.tipo_documento,
+				'num_documento': this.num_documento,
+				'direccion': this.direccion,
+				'telefono': this.telefono,
+				'email': this.email,
+				'contacto': this.contacto,
+				'telefono_contacto': this.telefono_contacto,
+				'id': this.persona_id
+			}).then(function () {
+				me.cerrarModal();
+				me.listarPersona(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		validarPersona: function validarPersona() {
+			this.error_persona = 0;
+			this.error_msj_per = [];
 
-            if (!this.nombre) this.error_msj_per.push('El nombre de la persona no puede estar vacio');
+			if (!this.nombre) this.error_msj_per.push('El nombre de la persona no puede estar vacio');
 
-            if (this.error_msj_per.length) this.error_persona = 1;
+			if (this.error_msj_per.length) this.error_persona = 1;
 
-            return this.error_persona;
-        },
-        cerrarModal: function cerrarModal() {
-            this.modal = 0;
-            this.titulo_modal = '';
-            this.persona_id = 0;
-            this.nombre = '';
-            this.tipo_documento = 'RIF';
-            this.num_documento = '';
-            this.direccion = '';
-            this.telefono = '';
-            this.email = '';
-            this.contacto = '';
-            this.telefono_contacto = '';
-            this.error_persona = 0;
-        },
-        abrirModal: function abrirModal(modelo, accion) {
-            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+			return this.error_persona;
+		},
+		cerrarModal: function cerrarModal() {
+			this.modal = 0;
+			this.titulo_modal = '';
+			this.persona_id = 0;
+			this.nombre = '';
+			this.tipo_documento = 'RIF';
+			this.num_documento = '';
+			this.direccion = '';
+			this.telefono = '';
+			this.email = '';
+			this.contacto = '';
+			this.telefono_contacto = '';
+			this.error_persona = 0;
+		},
+		abrirModal: function abrirModal(modelo, accion) {
+			var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
-            switch (modelo) {
-                case "persona":
-                    {
-                        switch (accion) {
-                            case "registrar":
-                                {
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Registrar Proveedor', this.nombre = '';
-                                    this.tipo_documento = 'RIF';
-                                    this.num_documento = '';
-                                    this.direccion = '';
-                                    this.telefono = '';
-                                    this.email = '';
-                                    this.contacto = '';
-                                    this.telefono_contacto = '';
-                                    this.tipo_accion = 1;
-                                    break;
-                                }
-                            case "actualizar":
-                                {
-                                    //console.log(data);
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Actualizar Proveedor';
-                                    this.tipo_accion = 2;
-                                    this.persona_id = data['id'];
-                                    this.nombre = data['nombre'];
-                                    this.tipo_documento = data['tipo_documento'];
-                                    this.num_documento = data['num_documento'];
-                                    this.direccion = data['direccion'];
-                                    this.telefono = data['telefono'];
-                                    this.email = data['email'];
-                                    this.contacto = data['contacto'];
-                                    this.telefono_contacto = data['telefono_contacto'];
-                                    break;
-                                }
-                        }
-                    }
-            }
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'nombre';
-            this.listarPersona(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarPersona(1, this.buscar, this.criterio);
-    }
+			switch (modelo) {
+				case "persona":
+					{
+						switch (accion) {
+							case "registrar":
+								{
+									this.modal = 1;
+									this.titulo_modal = 'Registrar Proveedor', this.nombre = '';
+									this.tipo_documento = 'RIF';
+									this.num_documento = '';
+									this.direccion = '';
+									this.telefono = '';
+									this.email = '';
+									this.contacto = '';
+									this.telefono_contacto = '';
+									this.tipo_accion = 1;
+									break;
+								}
+							case "actualizar":
+								{
+									//console.log(data);
+									this.modal = 1;
+									this.titulo_modal = 'Actualizar Proveedor';
+									this.tipo_accion = 2;
+									this.persona_id = data['id'];
+									this.nombre = data['nombre'];
+									this.tipo_documento = data['tipo_documento'];
+									this.num_documento = data['num_documento'];
+									this.direccion = data['direccion'];
+									this.telefono = data['telefono'];
+									this.email = data['email'];
+									this.contacto = data['contacto'];
+									this.telefono_contacto = data['telefono_contacto'];
+									break;
+								}
+						}
+					}
+			}
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'nombre';
+			this.listarPersona(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarPersona(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -40935,7 +40924,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Proveedores\n            "),
+          _vm._v(" Proveedores\n\t\t\t"),
           _c(
             "button",
             {
@@ -40947,10 +40936,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n            ")
-            ]
+            [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n\t\t\t")]
           )
         ]),
         _vm._v(" "),
@@ -41063,7 +41049,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "icon-trash" }),
-                    _vm._v(" Limpiar\n                        ")
+                    _vm._v(" Limpiar\n\t\t\t\t\t\t")
                   ]
                 )
               ])
@@ -41802,7 +41788,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -41888,84 +41874,84 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            rol_id: 0,
-            nombre: '',
-            descripcion: '',
-            array_rol: [],
-            modal: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'nombre',
-            buscar: ''
-        };
-    },
+	data: function data() {
+		return {
+			rol_id: 0,
+			nombre: '',
+			descripcion: '',
+			array_rol: [],
+			modal: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'nombre',
+			buscar: ''
+		};
+	},
 
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        }
-    },
-    methods: {
-        listarRol: function listarRol(page, buscar, criterio) {
-            var me = this;
-            var url = '/rol?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return page_array;
+		}
+	},
+	methods: {
+		listarRol: function listarRol(page, buscar, criterio) {
+			var me = this;
+			var url = '/rol?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_rol = respuesta.roles.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarRol(page, buscar, criterio);
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'nombre';
-            this.listarRol(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarRol(1, this.buscar, this.criterio);
-    }
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_rol = respuesta.roles.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarRol(page, buscar, criterio);
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'nombre';
+			this.listarRol(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarRol(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -42084,7 +42070,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "icon-trash" }),
-                    _vm._v(" Limpiar\n                        ")
+                    _vm._v(" Limpiar\n\t\t\t\t\t\t")
                   ]
                 )
               ])
@@ -42230,7 +42216,7 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "card-header" }, [
       _c("i", { staticClass: "fa fa-align-justify" }),
-      _vm._v(" Roles\n        ")
+      _vm._v(" Roles\n\t\t")
     ])
   },
   function() {
@@ -42343,7 +42329,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n", ""]);
 
 // exports
 
@@ -42544,301 +42530,301 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            persona_id: 0,
-            idrol: 0,
-            nombre: '',
-            tipo_documento: 'CI',
-            num_documento: '',
-            direccion: '',
-            telefono: '',
-            email: '',
-            usuario: '',
-            password: '',
-            array_persona: [],
-            array_rol: [],
-            modal: 0,
-            titulo_modal: '',
-            tipo_accion: 0,
-            error_persona: 0,
-            error_msj_per: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'nombre',
-            buscar: ''
-        };
-    },
+	data: function data() {
+		return {
+			persona_id: 0,
+			idrol: 0,
+			nombre: '',
+			tipo_documento: 'CI',
+			num_documento: '',
+			direccion: '',
+			telefono: '',
+			email: '',
+			usuario: '',
+			password: '',
+			array_persona: [],
+			array_rol: [],
+			modal: 0,
+			titulo_modal: '',
+			tipo_accion: 0,
+			error_persona: 0,
+			error_msj_per: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'nombre',
+			buscar: ''
+		};
+	},
 
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        }
-    },
-    methods: {
-        listarPersona: function listarPersona(page, buscar, criterio) {
-            var me = this;
-            var url = '/user?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return page_array;
+		}
+	},
+	methods: {
+		listarPersona: function listarPersona(page, buscar, criterio) {
+			var me = this;
+			var url = '/user?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_persona = respuesta.personas.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        listarRol: function listarRol() {
-            var me = this;
-            var url = '/rol/listarRol';
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_persona = respuesta.personas.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		listarRol: function listarRol() {
+			var me = this;
+			var url = '/rol/listarRol';
 
-            axios.get(url).then(function (response) {
-                me.array_rol = response.data;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarPersona(page, buscar, criterio);
-        },
-        registrarPersona: function registrarPersona() {
+			axios.get(url).then(function (response) {
+				me.array_rol = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarPersona(page, buscar, criterio);
+		},
+		registrarPersona: function registrarPersona() {
 
-            if (this.validarPersona()) {
-                return;
-            }
+			if (this.validarPersona()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.post('/user/registrar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email,
-                'usuario': this.usuario,
-                'password': this.password,
-                'idrol': this.idrol
-            }).then(function () {
-                me.cerrarModal();
-                me.listarPersona(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        actualizarPersona: function actualizarPersona() {
+			axios.post('/user/registrar', {
+				'nombre': this.nombre,
+				'tipo_documento': this.tipo_documento,
+				'num_documento': this.num_documento,
+				'direccion': this.direccion,
+				'telefono': this.telefono,
+				'email': this.email,
+				'usuario': this.usuario,
+				'password': this.password,
+				'idrol': this.idrol
+			}).then(function () {
+				me.cerrarModal();
+				me.listarPersona(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		actualizarPersona: function actualizarPersona() {
 
-            if (this.validarPersona()) {
-                return;
-            }
+			if (this.validarPersona()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.put('/user/actualizar', {
-                'nombre': this.nombre,
-                'tipo_documento': this.tipo_documento,
-                'num_documento': this.num_documento,
-                'direccion': this.direccion,
-                'telefono': this.telefono,
-                'email': this.email,
-                'usuario': this.usuario,
-                'password': this.password,
-                'id': this.persona_id,
-                'idrol': this.idrol
-            }).then(function () {
-                me.cerrarModal();
-                me.listarPersona(1, '', 'nombre');
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        desactivarUsuario: function desactivarUsuario(id) {
-            var _this = this;
+			axios.put('/user/actualizar', {
+				'nombre': this.nombre,
+				'tipo_documento': this.tipo_documento,
+				'num_documento': this.num_documento,
+				'direccion': this.direccion,
+				'telefono': this.telefono,
+				'email': this.email,
+				'usuario': this.usuario,
+				'password': this.password,
+				'id': this.persona_id,
+				'idrol': this.idrol
+			}).then(function () {
+				me.cerrarModal();
+				me.listarPersona(1, '', 'nombre');
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		desactivarUsuario: function desactivarUsuario(id) {
+			var _this = this;
 
-            swal({
-                title: '¿Estas seguro de desactivar este usuario?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro de desactivar este usuario?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this;
+					var me = _this;
 
-                    axios.put('/user/desactivar', {
-                        'id': id
-                    }).then(function () {
-                        me.listarPersona(1, '', 'nombre');
-                        swal('Desactivada', 'El usuario ha sido desactivado', 'success');
-                    }).catch(function () {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        activarUsuario: function activarUsuario(id) {
-            var _this2 = this;
+					axios.put('/user/desactivar', {
+						'id': id
+					}).then(function () {
+						me.listarPersona(1, '', 'nombre');
+						swal('Desactivada', 'El usuario ha sido desactivado', 'success');
+					}).catch(function () {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		activarUsuario: function activarUsuario(id) {
+			var _this2 = this;
 
-            swal({
-                title: '¿Estas seguro de activar este usuario?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro de activar este usuario?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this2;
+					var me = _this2;
 
-                    axios.put('/user/activar', {
-                        'id': id
-                    }).then(function () {
-                        me.listarPersona(1, '', 'nombre');
-                        swal('Activada', 'El usuario ha sido activado', 'success');
-                    }).catch(function () {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        validarPersona: function validarPersona() {
-            this.error_persona = 0;
-            this.error_msj_per = [];
+					axios.put('/user/activar', {
+						'id': id
+					}).then(function () {
+						me.listarPersona(1, '', 'nombre');
+						swal('Activada', 'El usuario ha sido activado', 'success');
+					}).catch(function () {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		validarPersona: function validarPersona() {
+			this.error_persona = 0;
+			this.error_msj_per = [];
 
-            if (!this.nombre) this.error_msj_per.push('El nombre de la persona no puede estar vacio');
+			if (!this.nombre) this.error_msj_per.push('El nombre de la persona no puede estar vacio');
 
-            if (!this.usuario) this.error_msj_per.push('El nombre de usuario no puede estar vacio');
+			if (!this.usuario) this.error_msj_per.push('El nombre de usuario no puede estar vacio');
 
-            if (!this.password) this.error_msj_per.push('El password del usuario no puede estar vacio');
+			if (!this.password) this.error_msj_per.push('El password del usuario no puede estar vacio');
 
-            if (this.idrol == 0) this.error_msj_per.push('Seleccione un rol para el usuario');
+			if (this.idrol == 0) this.error_msj_per.push('Seleccione un rol para el usuario');
 
-            if (this.error_msj_per.length) this.error_persona = 1;
+			if (this.error_msj_per.length) this.error_persona = 1;
 
-            return this.error_persona;
-        },
-        cerrarModal: function cerrarModal() {
-            this.modal = 0;
-            this.titulo_modal = '';
-            this.persona_id = 0;
-            this.idrol = 0;
-            this.nombre = '';
-            this.tipo_documento = 'CI';
-            this.num_documento = '';
-            this.direccion = '';
-            this.telefono = '';
-            this.email = '';
-            this.usuario = '';
-            this.password = '';
-            this.error_persona = 0;
-        },
-        abrirModal: function abrirModal(modelo, accion) {
-            var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
+			return this.error_persona;
+		},
+		cerrarModal: function cerrarModal() {
+			this.modal = 0;
+			this.titulo_modal = '';
+			this.persona_id = 0;
+			this.idrol = 0;
+			this.nombre = '';
+			this.tipo_documento = 'CI';
+			this.num_documento = '';
+			this.direccion = '';
+			this.telefono = '';
+			this.email = '';
+			this.usuario = '';
+			this.password = '';
+			this.error_persona = 0;
+		},
+		abrirModal: function abrirModal(modelo, accion) {
+			var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
 
 
-            this.listarRol();
+			this.listarRol();
 
-            switch (modelo) {
-                case "persona":
-                    {
-                        switch (accion) {
-                            case "registrar":
-                                {
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Registrar Usuario', this.nombre = '';
-                                    this.tipo_documento = 'CI';
-                                    this.num_documento = '';
-                                    this.direccion = '';
-                                    this.telefono = '';
-                                    this.email = '';
-                                    this.usuario = '';
-                                    this.password = '';
-                                    this.idrol = 0;
-                                    this.tipo_accion = 1;
-                                    break;
-                                }
-                            case "actualizar":
-                                {
-                                    //console.log(data);
-                                    this.modal = 1;
-                                    this.titulo_modal = 'Actualizar Usuario';
-                                    this.tipo_accion = 2;
-                                    this.persona_id = data['id'];
-                                    this.nombre = data['nombre'];
-                                    this.tipo_documento = data['tipo_documento'];
-                                    this.num_documento = data['num_documento'];
-                                    this.direccion = data['direccion'];
-                                    this.telefono = data['telefono'];
-                                    this.email = data['email'];
-                                    this.usuario = data['usuario'];
-                                    this.password = data['password'];
-                                    this.idrol = data['idrol'];
-                                    break;
-                                }
-                        }
-                    }
-            }
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'nombre';
-            this.listarPersona(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarPersona(1, this.buscar, this.criterio);
-    }
+			switch (modelo) {
+				case "persona":
+					{
+						switch (accion) {
+							case "registrar":
+								{
+									this.modal = 1;
+									this.titulo_modal = 'Registrar Usuario', this.nombre = '';
+									this.tipo_documento = 'CI';
+									this.num_documento = '';
+									this.direccion = '';
+									this.telefono = '';
+									this.email = '';
+									this.usuario = '';
+									this.password = '';
+									this.idrol = 0;
+									this.tipo_accion = 1;
+									break;
+								}
+							case "actualizar":
+								{
+									//console.log(data);
+									this.modal = 1;
+									this.titulo_modal = 'Actualizar Usuario';
+									this.tipo_accion = 2;
+									this.persona_id = data['id'];
+									this.nombre = data['nombre'];
+									this.tipo_documento = data['tipo_documento'];
+									this.num_documento = data['num_documento'];
+									this.direccion = data['direccion'];
+									this.telefono = data['telefono'];
+									this.email = data['email'];
+									this.usuario = data['usuario'];
+									this.password = data['password'];
+									this.idrol = data['idrol'];
+									break;
+								}
+						}
+					}
+			}
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'nombre';
+			this.listarPersona(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarPersona(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -42856,7 +42842,7 @@ var render = function() {
       _c("div", { staticClass: "card" }, [
         _c("div", { staticClass: "card-header" }, [
           _c("i", { staticClass: "fa fa-align-justify" }),
-          _vm._v(" Usuarios\n            "),
+          _vm._v(" Usuarios\n\t\t\t"),
           _c(
             "button",
             {
@@ -42868,10 +42854,7 @@ var render = function() {
                 }
               }
             },
-            [
-              _c("i", { staticClass: "icon-plus" }),
-              _vm._v(" Nuevo\n            ")
-            ]
+            [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n\t\t\t")]
           )
         ]),
         _vm._v(" "),
@@ -42984,7 +42967,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "icon-trash" }),
-                    _vm._v(" Limpiar\n                        ")
+                    _vm._v(" Limpiar\n\t\t\t\t\t\t")
                   ]
                 )
               ])
@@ -43822,7 +43805,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n@media (min-width: 600px) {\n.btnagregar {\n        margin-top: 2rem;\n}\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n@media (min-width: 600px) {\n.btnagregar {\n\t\tmargin-top: 2rem;\n}\n}\n", ""]);
 
 // exports
 
@@ -44239,380 +44222,380 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            ingreso_id: 0,
-            id_proveedor: 0,
-            proveedor: '',
-            nombre: '',
-            tipo_comprobante: 'BOLETA',
-            serie_comprobante: '',
-            num_comprobante: '',
-            impuesto: 0.12,
-            total_impuesto: 0.00,
-            total_parcial: 0.00,
-            total: 0.00,
-            array_ingreso: [],
-            array_proveedor: [],
-            array_detalle: [],
-            array_articulo: [],
-            id_articulo: 0,
-            codigo: '',
-            articulo: '',
-            precio: 0,
-            cantidad: 0,
-            listado: 1, //Si visualizo el estado
-            modal: 0,
-            titulo_modal: '',
-            tipo_accion: 0,
-            error_ingreso: 0,
-            error_msj_ing: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'num_comprobante',
-            buscar: '',
-            criterio_a: 'articulos.nombre',
-            buscar_a: ''
-        };
-    },
+	data: function data() {
+		return {
+			ingreso_id: 0,
+			id_proveedor: 0,
+			proveedor: '',
+			nombre: '',
+			tipo_comprobante: 'BOLETA',
+			serie_comprobante: '',
+			num_comprobante: '',
+			impuesto: 0.12,
+			total_impuesto: 0.00,
+			total_parcial: 0.00,
+			total: 0.00,
+			array_ingreso: [],
+			array_proveedor: [],
+			array_detalle: [],
+			array_articulo: [],
+			id_articulo: 0,
+			codigo: '',
+			articulo: '',
+			precio: 0,
+			cantidad: 0,
+			listado: 1, //Si visualizo el estado
+			modal: 0,
+			titulo_modal: '',
+			tipo_accion: 0,
+			error_ingreso: 0,
+			error_msj_ing: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'num_comprobante',
+			buscar: '',
+			criterio_a: 'articulos.nombre',
+			buscar_a: ''
+		};
+	},
 
-    components: {
-        vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a
-    },
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	components: {
+		vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a
+	},
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        },
-        calcularTotal: function calcularTotal() {
-            var resultado = 0;
+			return page_array;
+		},
+		calcularTotal: function calcularTotal() {
+			var resultado = 0;
 
-            for (var i = 0; i < this.array_detalle.length; i++) {
+			for (var i = 0; i < this.array_detalle.length; i++) {
 
-                resultado = resultado + this.array_detalle[i].precio * this.array_detalle[i].cantidad;
-            }
+				resultado = resultado + this.array_detalle[i].precio * this.array_detalle[i].cantidad;
+			}
 
-            return resultado;
-        }
-    },
-    methods: {
-        listarIngreso: function listarIngreso(page, buscar, criterio) {
-            var me = this;
-            var url = '/ingreso?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return resultado;
+		}
+	},
+	methods: {
+		listarIngreso: function listarIngreso(page, buscar, criterio) {
+			var me = this;
+			var url = '/ingreso?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_ingreso = respuesta.ingresos.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        listarProveedor: function listarProveedor(search, loading) {
-            var me = this;
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_ingreso = respuesta.ingresos.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		listarProveedor: function listarProveedor(search, loading) {
+			var me = this;
 
-            loading(true);
+			loading(true);
 
-            var url = '/proveedor/listar-proveedor?filtro=' + search;
+			var url = '/proveedor/listar-proveedor?filtro=' + search;
 
-            axios.get(url).then(function (response) {
-                q: search;
-                me.array_proveedor = response.data;
+			axios.get(url).then(function (response) {
+				q: search;
+				me.array_proveedor = response.data;
 
-                loading(false);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        getDatosProveedor: function getDatosProveedor(val_1) {
-            var me = this;
-            me.loading = true;
-            me.id_proveedor = val_1.id;
-        },
-        buscarArticulo: function buscarArticulo() {
-            var me = this;
-            var url = '/articulo/buscar-articulo?filtro=' + me.codigo;
+				loading(false);
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getDatosProveedor: function getDatosProveedor(val_1) {
+			var me = this;
+			me.loading = true;
+			me.id_proveedor = val_1.id;
+		},
+		buscarArticulo: function buscarArticulo() {
+			var me = this;
+			var url = '/articulo/buscar-articulo?filtro=' + me.codigo;
 
-            axios.get(url).then(function (response) {
-                me.array_articulo = response.data;
+			axios.get(url).then(function (response) {
+				me.array_articulo = response.data;
 
-                if (me.array_articulo.length > 0) {
-                    me.articulo = me.array_articulo[0]['nombre'];
-                    me.id_articulo = me.array_articulo[0]['id'];
-                } else {
+				if (me.array_articulo.length > 0) {
+					me.articulo = me.array_articulo[0]['nombre'];
+					me.id_articulo = me.array_articulo[0]['id'];
+				} else {
 
-                    me.articulo = 'No existe articulo';
-                    me.id_articulo = 0;
-                }
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarIngreso(page, buscar, criterio);
-        },
-        encuentra: function encuentra(id_articulo) {
-            var sw = false;
+					me.articulo = 'No existe articulo';
+					me.id_articulo = 0;
+				}
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarIngreso(page, buscar, criterio);
+		},
+		encuentra: function encuentra(id_articulo) {
+			var sw = false;
 
-            for (var i = 0; i < this.array_detalle.length; i++) {
+			for (var i = 0; i < this.array_detalle.length; i++) {
 
-                if (this.array_detalle[i].id_articulo == id_articulo) {
+				if (this.array_detalle[i].id_articulo == id_articulo) {
 
-                    sw = true;
-                }
-            }
+					sw = true;
+				}
+			}
 
-            return sw;
-        },
-        eliminarDetalle: function eliminarDetalle(index) {
-            var me = this;
-            me.array_detalle.splice(index, 1);
-        },
-        agregarDetalle: function agregarDetalle() {
-            var me = this;
+			return sw;
+		},
+		eliminarDetalle: function eliminarDetalle(index) {
+			var me = this;
+			me.array_detalle.splice(index, 1);
+		},
+		agregarDetalle: function agregarDetalle() {
+			var me = this;
 
-            if (me.id_articulo == 0 || me.cantidad == 0 || me.precio == 0) {} else {
+			if (me.id_articulo == 0 || me.cantidad == 0 || me.precio == 0) {} else {
 
-                if (me.encuentra(me.id_articulo)) {
-                    swal({
-                        type: 'error',
-                        title: 'Error...',
-                        text: 'Ese articulo ya se encuentra agregado'
-                    });
-                } else {
+				if (me.encuentra(me.id_articulo)) {
+					swal({
+						type: 'error',
+						title: 'Error...',
+						text: 'Ese articulo ya se encuentra agregado'
+					});
+				} else {
 
-                    me.array_detalle.push({
-                        id_articulo: me.id_articulo,
-                        articulo: me.articulo,
-                        cantidad: me.cantidad,
-                        precio: me.precio
-                    });
+					me.array_detalle.push({
+						id_articulo: me.id_articulo,
+						articulo: me.articulo,
+						cantidad: me.cantidad,
+						precio: me.precio
+					});
 
-                    me.codigo = '';
-                    me.id_articulo = 0;
-                    me.articulo = '';
-                    me.cantidad = 0;
-                    me.precio = 0;
-                }
-            }
-        },
-        agregarDetalleModal: function agregarDetalleModal() {
-            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+					me.codigo = '';
+					me.id_articulo = 0;
+					me.articulo = '';
+					me.cantidad = 0;
+					me.precio = 0;
+				}
+			}
+		},
+		agregarDetalleModal: function agregarDetalleModal() {
+			var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
 
-            var me = this;
+			var me = this;
 
-            if (me.encuentra(data['id'])) {
-                swal({
-                    type: 'error',
-                    title: 'Error...',
-                    text: 'Ese articulo ya se encuentra agregado'
-                });
-            } else {
+			if (me.encuentra(data['id'])) {
+				swal({
+					type: 'error',
+					title: 'Error...',
+					text: 'Ese articulo ya se encuentra agregado'
+				});
+			} else {
 
-                me.array_detalle.push({
-                    id_articulo: data['id'],
-                    articulo: data['nombre'],
-                    cantidad: 1,
-                    precio: 1
-                });
-            }
-        },
-        listarArticulo: function listarArticulo(buscar, criterio) {
-            var me = this;
-            var url = '/articulo/listar-articulo?buscar=' + buscar + '&criterio=' + criterio;
+				me.array_detalle.push({
+					id_articulo: data['id'],
+					articulo: data['nombre'],
+					cantidad: 1,
+					precio: 1
+				});
+			}
+		},
+		listarArticulo: function listarArticulo(buscar, criterio) {
+			var me = this;
+			var url = '/articulo/listar-articulo?buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                me.array_articulo = response.data.data;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        registrarIngreso: function registrarIngreso() {
+			axios.get(url).then(function (response) {
+				me.array_articulo = response.data.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		registrarIngreso: function registrarIngreso() {
 
-            if (this.validarIngreso()) {
-                return;
-            }
+			if (this.validarIngreso()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.post('/ingreso/registrar', {
+			axios.post('/ingreso/registrar', {
 
-                'id_proveedor': this.id_proveedor,
-                'tipo_comprobante': this.tipo_comprobante,
-                'serie_comprobante': this.serie_comprobante,
-                'num_comprobante': this.num_comprobante,
-                'impuesto': this.impuesto,
-                'total': this.total,
-                'data': this.array_detalle
+				'id_proveedor': this.id_proveedor,
+				'tipo_comprobante': this.tipo_comprobante,
+				'serie_comprobante': this.serie_comprobante,
+				'num_comprobante': this.num_comprobante,
+				'impuesto': this.impuesto,
+				'total': this.total,
+				'data': this.array_detalle
 
-            }).then(function () {
+			}).then(function () {
 
-                me.listado = 1;
-                me.listarIngreso(1, '', 'num_comprobante');
-                me.id_proveedor = 0;
-                me.tipo_comprobante = 'BOLETA';
-                me.serie_comprobante = '';
-                me.num_comprobante = '';
-                me.impuesto = 0.12;
-                me.total = 0.0;
-                me.id_articulo = '';
-                me.cantidad = 0;
-                me.precio = 0;
-                me.array_detalle = [];
-            }).catch(function () {
-                console.log(error);
-            });
-        },
-        validarIngreso: function validarIngreso() {
-            this.error_ingreso = 0;
-            this.error_msj_ing = [];
+				me.listado = 1;
+				me.listarIngreso(1, '', 'num_comprobante');
+				me.id_proveedor = 0;
+				me.tipo_comprobante = 'BOLETA';
+				me.serie_comprobante = '';
+				me.num_comprobante = '';
+				me.impuesto = 0.12;
+				me.total = 0.0;
+				me.id_articulo = '';
+				me.cantidad = 0;
+				me.precio = 0;
+				me.array_detalle = [];
+			}).catch(function () {
+				console.log(error);
+			});
+		},
+		validarIngreso: function validarIngreso() {
+			this.error_ingreso = 0;
+			this.error_msj_ing = [];
 
-            if (!this.id_proveedor) this.error_msj_ing.push('Seleccione un proveedor');
+			if (!this.id_proveedor) this.error_msj_ing.push('Seleccione un proveedor');
 
-            if (!this.tipo_comprobante) this.error_msj_ing.push('Seleccione el comprobante');
+			if (!this.tipo_comprobante) this.error_msj_ing.push('Seleccione el comprobante');
 
-            if (!this.num_comprobante) this.error_msj_ing.push('Ingrese el numero de comprobante');
+			if (!this.num_comprobante) this.error_msj_ing.push('Ingrese el numero de comprobante');
 
-            if (!this.impuesto) this.error_msj_ing.push('Ingrese el impuesto de compra');
+			if (!this.impuesto) this.error_msj_ing.push('Ingrese el impuesto de compra');
 
-            if (this.array_detalle <= 0) this.error_msj_ing.push('Ingrese detalles');
+			if (this.array_detalle <= 0) this.error_msj_ing.push('Ingrese detalles');
 
-            if (this.error_msj_ing.length) this.error_ingreso = 1;
+			if (this.error_msj_ing.length) this.error_ingreso = 1;
 
-            return this.error_ingreso;
-        },
-        cerrarModal: function cerrarModal() {
-            this.modal = 0;
-            this.titulo_modal = '';
-        },
-        mostrarDetalle: function mostrarDetalle() {
-            var me = this;
-            this.listado = 0;
+			return this.error_ingreso;
+		},
+		cerrarModal: function cerrarModal() {
+			this.modal = 0;
+			this.titulo_modal = '';
+		},
+		mostrarDetalle: function mostrarDetalle() {
+			var me = this;
+			this.listado = 0;
 
-            me.id_proveedor = 0;
-            me.tipo_comprobante = 'BOLETA';
-            me.serie_comprobante = '';
-            me.num_comprobante = '';
-            me.impuesto = 0.12;
-            me.total = 0.0;
-            me.id_articulo = '';
-            me.cantidad = 0;
-            me.precio = 0;
-            me.array_detalle = [];
-        },
-        ocultarDetalle: function ocultarDetalle() {
-            this.listado = 1;
-        },
-        verIngreso: function verIngreso(id) {
-            var me = this;
-            me.listado = 2;
+			me.id_proveedor = 0;
+			me.tipo_comprobante = 'BOLETA';
+			me.serie_comprobante = '';
+			me.num_comprobante = '';
+			me.impuesto = 0.12;
+			me.total = 0.0;
+			me.id_articulo = '';
+			me.cantidad = 0;
+			me.precio = 0;
+			me.array_detalle = [];
+		},
+		ocultarDetalle: function ocultarDetalle() {
+			this.listado = 1;
+		},
+		verIngreso: function verIngreso(id) {
+			var me = this;
+			me.listado = 2;
 
-            //obtener los datos del ingreso
-            var array_ingreso_t = [];
-            var url = '/ingreso/obtener-cabecera?id=' + id;
+			//obtener los datos del ingreso
+			var array_ingreso_t = [];
+			var url = '/ingreso/obtener-cabecera?id=' + id;
 
-            axios.get(url).then(function (response) {
-                array_ingreso_t = response.data;
+			axios.get(url).then(function (response) {
+				array_ingreso_t = response.data;
 
-                me.proveedor = array_ingreso_t[0]['nombre'];
-                me.tipo_comprobante = array_ingreso_t[0]['tipo_comprobante'];
-                me.serie_comprobante = array_ingreso_t[0]['serie_comprobante'];
-                me.num_comprobante = array_ingreso_t[0]['num_comprobante'];
-                me.impuesto = array_ingreso_t[0]['impuesto'];
-                me.total = array_ingreso_t[0]['total'];
-            }).catch(function (error) {
-                console.log(error);
-            });
-            //obtener los  datos de los detalles
-            var url_d = '/ingreso/obtener-detalles?id=' + id;
+				me.proveedor = array_ingreso_t[0]['nombre'];
+				me.tipo_comprobante = array_ingreso_t[0]['tipo_comprobante'];
+				me.serie_comprobante = array_ingreso_t[0]['serie_comprobante'];
+				me.num_comprobante = array_ingreso_t[0]['num_comprobante'];
+				me.impuesto = array_ingreso_t[0]['impuesto'];
+				me.total = array_ingreso_t[0]['total'];
+			}).catch(function (error) {
+				console.log(error);
+			});
+			//obtener los  datos de los detalles
+			var url_d = '/ingreso/obtener-detalles?id=' + id;
 
-            axios.get(url_d).then(function (response) {
-                me.array_detalle = response.data;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        abrirModal: function abrirModal() {
-            this.array_articulo = [];
-            this.modal = 1;
-            this.titulo_modal = 'Seleccione uno o varios articulos';
-        },
-        desactivarIngreso: function desactivarIngreso(id) {
-            var _this = this;
+			axios.get(url_d).then(function (response) {
+				me.array_detalle = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		abrirModal: function abrirModal() {
+			this.array_articulo = [];
+			this.modal = 1;
+			this.titulo_modal = 'Seleccione uno o varios articulos';
+		},
+		desactivarIngreso: function desactivarIngreso(id) {
+			var _this = this;
 
-            swal({
-                title: '¿Estas seguro de anular este ingreso?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro de anular este ingreso?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this;
+					var me = _this;
 
-                    axios.put('/ingreso/desactivar', {
-                        'id': id
-                    }).then(function () {
-                        me.listarIngreso(1, '', 'num_comprobante');
-                        swal('Anulado', 'El ingreso ha sido desactivado', 'success');
-                    }).catch(function () {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'num_comprobante';
-            this.listarIngreso(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarIngreso(1, this.buscar, this.criterio);
-    }
+					axios.put('/ingreso/desactivar', {
+						'id': id
+					}).then(function () {
+						me.listarIngreso(1, '', 'num_comprobante');
+						swal('Anulado', 'El ingreso ha sido desactivado', 'success');
+					}).catch(function () {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'num_comprobante';
+			this.listarIngreso(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarIngreso(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -44633,7 +44616,7 @@ var render = function() {
         [
           _c("div", { staticClass: "card-header" }, [
             _c("i", { staticClass: "fa fa-align-justify" }),
-            _vm._v(" Ingresos\n            "),
+            _vm._v(" Ingresos\n\t\t\t"),
             _c(
               "button",
               {
@@ -44645,10 +44628,7 @@ var render = function() {
                   }
                 }
               },
-              [
-                _c("i", { staticClass: "icon-plus" }),
-                _vm._v(" Nuevo\n            ")
-              ]
+              [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n\t\t\t")]
             )
           ]),
           _vm._v(" "),
@@ -44775,7 +44755,7 @@ var render = function() {
                           },
                           [
                             _c("i", { staticClass: "icon-trash" }),
-                            _vm._v(" Limpiar\n                            ")
+                            _vm._v(" Limpiar\n\t\t\t\t\t\t\t")
                           ]
                         )
                       ])
@@ -45495,12 +45475,12 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n\t\t\t\t\t\t\t\t\t\t" +
                                               _vm._s(
                                                 detalle.precio *
                                                   detalle.cantidad
                                               ) +
-                                              "\n                                    "
+                                              "\n\t\t\t\t\t\t\t\t\t"
                                           )
                                         ])
                                       ])
@@ -45725,12 +45705,12 @@ var render = function() {
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
-                                                "\n                                        " +
+                                                "\n\t\t\t\t\t\t\t\t\t\t" +
                                                   _vm._s(
                                                     detalle.precio *
                                                       detalle.cantidad
                                                   ) +
-                                                  "\n                                    "
+                                                  "\n\t\t\t\t\t\t\t\t\t"
                                               )
                                             ])
                                           ])
@@ -46218,7 +46198,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", { attrs: { colspan: "5" } }, [
         _vm._v(
-          "\n                                        NO hay articulos agregados\n                                    "
+          "\n\t\t\t\t\t\t\t\t\t\tNO hay articulos agregados\n\t\t\t\t\t\t\t\t\t"
         )
       ])
     ])
@@ -46268,7 +46248,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", { attrs: { colspan: "4" } }, [
         _vm._v(
-          "\n                                        NO hay articulos agregados\n                                    "
+          "\n\t\t\t\t\t\t\t\t\t\tNO hay articulos agregados\n\t\t\t\t\t\t\t\t\t"
         )
       ])
     ])
@@ -46391,7 +46371,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n.modal-content{\n    width: 100% !important;\n    position: absolute !important;\n}\n.mostrar{\n    display: list-item !important;\n    opacity: 1 !important;\n    position: absolute !important;\n    background-color: #3c29297a !important;\n}\n.div-error{\n    display: flex;\n    justify-content: center;\n}\n.text-error{\n    color: red;\n    font-weight: bold;\n}\n@media (min-width: 600px) {\n.btnagregar {\n        margin-top: 2rem;\n}\n}\n", ""]);
+exports.push([module.i, "\n.modal-content{\n\twidth: 100% !important;\n\tposition: absolute !important;\n}\n.mostrar{\n\tdisplay: list-item !important;\n\topacity: 1 !important;\n\tposition: absolute !important;\n\tbackground-color: #3c29297a !important;\n}\n.div-error{\n\tdisplay: flex;\n\tjustify-content: center;\n}\n.text-error{\n\tcolor: red;\n\tfont-weight: bold;\n}\n@media (min-width: 600px) {\n.btnagregar {\n\t\tmargin-top: 2rem;\n}\n}\n", ""]);
 
 // exports
 
@@ -46823,413 +46803,413 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    data: function data() {
-        return {
-            venta_id: 0,
-            id_cliente: 0,
-            cliente: '',
-            tipo_comprobante: 'BOLETA',
-            serie_comprobante: '',
-            num_comprobante: '',
-            impuesto: 0.12,
-            total_impuesto: 0.00,
-            total_parcial: 0.00,
-            total: 0.00,
-            array_venta: [],
-            array_cliente: [],
-            array_detalle: [],
-            array_articulo: [],
-            id_articulo: 0,
-            codigo: '',
-            articulo: '',
-            precio_venta: 0,
-            stock: 0,
-            cantidad: 0,
-            descuento: 0.00,
-            listado: 1, //Si visualizo el estado
-            modal: 0,
-            titulo_modal: '',
-            tipo_accion: 0,
-            error_venta: 0,
-            error_msj_ven: 0,
-            pagination: {
-                'total': 0,
-                'current_page': 0,
-                'per_page': 0,
-                'last_page': 0,
-                'from': 0,
-                'to': 0
-            },
-            offset: 3,
-            criterio: 'num_comprobante',
-            buscar: '',
-            criterio_a: 'articulos.nombre',
-            buscar_a: ''
-        };
-    },
+	data: function data() {
+		return {
+			venta_id: 0,
+			id_cliente: 0,
+			cliente: '',
+			tipo_comprobante: 'BOLETA',
+			serie_comprobante: '',
+			num_comprobante: '',
+			impuesto: 0.12,
+			total_impuesto: 0.00,
+			total_parcial: 0.00,
+			total: 0.00,
+			array_venta: [],
+			array_cliente: [],
+			array_detalle: [],
+			array_articulo: [],
+			id_articulo: 0,
+			codigo: '',
+			articulo: '',
+			precio_venta: 0,
+			stock: 0,
+			cantidad: 0,
+			descuento: 0.00,
+			listado: 1, //Si visualizo el estado
+			modal: 0,
+			titulo_modal: '',
+			tipo_accion: 0,
+			error_venta: 0,
+			error_msj_ven: 0,
+			pagination: {
+				'total': 0,
+				'current_page': 0,
+				'per_page': 0,
+				'last_page': 0,
+				'from': 0,
+				'to': 0
+			},
+			offset: 3,
+			criterio: 'num_comprobante',
+			buscar: '',
+			criterio_a: 'articulos.nombre',
+			buscar_a: ''
+		};
+	},
 
-    components: {
-        vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a
-    },
-    computed: {
-        isActived: function isActived() {
-            return this.pagination.current_page;
-        },
-        pageNumber: function pageNumber() {
+	components: {
+		vSelect: __WEBPACK_IMPORTED_MODULE_0_vue_select___default.a
+	},
+	computed: {
+		isActived: function isActived() {
+			return this.pagination.current_page;
+		},
+		pageNumber: function pageNumber() {
 
-            if (!this.pagination.to) {
-                return [];
-            }
+			if (!this.pagination.to) {
+				return [];
+			}
 
-            var from = this.pagination.current_page - this.offset;
+			var from = this.pagination.current_page - this.offset;
 
-            if (from < 1) from = 1;
+			if (from < 1) from = 1;
 
-            var to = from + this.offset * 2;
+			var to = from + this.offset * 2;
 
-            if (to >= this.pagination.last_page) to = this.pagination.last_page;
+			if (to >= this.pagination.last_page) to = this.pagination.last_page;
 
-            var page_array = [];
+			var page_array = [];
 
-            while (from <= to) {
-                page_array.push(from);
-                from++;
-            }
+			while (from <= to) {
+				page_array.push(from);
+				from++;
+			}
 
-            return page_array;
-        },
-        calcularTotal: function calcularTotal() {
-            var resultado = 0;
+			return page_array;
+		},
+		calcularTotal: function calcularTotal() {
+			var resultado = 0;
 
-            for (var i = 0; i < this.array_detalle.length; i++) {
+			for (var i = 0; i < this.array_detalle.length; i++) {
 
-                resultado = resultado + (this.array_detalle[i].precio_venta * this.array_detalle[i].cantidad - this.array_detalle[i].descuento);
-            }
+				resultado = resultado + (this.array_detalle[i].precio_venta * this.array_detalle[i].cantidad - this.array_detalle[i].descuento);
+			}
 
-            return resultado;
-        }
-    },
-    methods: {
-        listarVenta: function listarVenta(page, buscar, criterio) {
-            var me = this;
-            var url = '/venta?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
+			return resultado;
+		}
+	},
+	methods: {
+		listarVenta: function listarVenta(page, buscar, criterio) {
+			var me = this;
+			var url = '/venta?page=' + page + '&buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                var respuesta = response.data;
-                me.array_venta = respuesta.ventas.data;
-                me.pagination = respuesta.pagination;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        listarCliente: function listarCliente(search, loading) {
-            var me = this;
+			axios.get(url).then(function (response) {
+				var respuesta = response.data;
+				me.array_venta = respuesta.ventas.data;
+				me.pagination = respuesta.pagination;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		listarCliente: function listarCliente(search, loading) {
+			var me = this;
 
-            loading(true);
+			loading(true);
 
-            var url = '/cliente/listar-cliente?filtro=' + search;
+			var url = '/cliente/listar-cliente?filtro=' + search;
 
-            axios.get(url).then(function (response) {
-                q: search;
-                me.array_cliente = response.data;
+			axios.get(url).then(function (response) {
+				q: search;
+				me.array_cliente = response.data;
 
-                loading(false);
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        getDatosCliente: function getDatosCliente(val_1) {
-            var me = this;
-            me.loading = true;
-            me.id_cliente = val_1.id;
-        },
-        buscarArticulo: function buscarArticulo() {
-            var me = this;
-            var url = '/articulo/buscar-articulo-venta?filtro=' + me.codigo;
+				loading(false);
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		getDatosCliente: function getDatosCliente(val_1) {
+			var me = this;
+			me.loading = true;
+			me.id_cliente = val_1.id;
+		},
+		buscarArticulo: function buscarArticulo() {
+			var me = this;
+			var url = '/articulo/buscar-articulo-venta?filtro=' + me.codigo;
 
-            axios.get(url).then(function (response) {
-                me.array_articulo = response.data;
+			axios.get(url).then(function (response) {
+				me.array_articulo = response.data;
 
-                if (me.array_articulo.length > 0) {
-                    me.articulo = me.array_articulo[0]['nombre'];
-                    me.id_articulo = me.array_articulo[0]['id'];
-                    me.precio_venta = me.array_articulo[0]['precio_venta'];
-                    me.stock = me.array_articulo[0]['stock'];
-                } else {
+				if (me.array_articulo.length > 0) {
+					me.articulo = me.array_articulo[0]['nombre'];
+					me.id_articulo = me.array_articulo[0]['id'];
+					me.precio_venta = me.array_articulo[0]['precio_venta'];
+					me.stock = me.array_articulo[0]['stock'];
+				} else {
 
-                    me.articulo = 'No existe articulo';
-                    me.id_articulo = 0;
-                }
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        pdfVenta: function pdfVenta(id) {
-            window.open('http://127.0.0.1:8000/venta/pdf/' + id, '_blank');
-        },
-        cambiarPagina: function cambiarPagina(page, buscar, criterio) {
-            var me = this;
-            //actualiza la pagina actual
-            me.pagination.current_page = page;
-            //envia la peticion para visualizar la data de esa pagina
-            me.listarVenta(page, buscar, criterio);
-        },
-        encuentra: function encuentra(id_articulo) {
-            var sw = false;
+					me.articulo = 'No existe articulo';
+					me.id_articulo = 0;
+				}
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		pdfVenta: function pdfVenta(id) {
+			window.open('http://127.0.0.1:8000/venta/pdf/' + id, '_blank');
+		},
+		cambiarPagina: function cambiarPagina(page, buscar, criterio) {
+			var me = this;
+			//actualiza la pagina actual
+			me.pagination.current_page = page;
+			//envia la peticion para visualizar la data de esa pagina
+			me.listarVenta(page, buscar, criterio);
+		},
+		encuentra: function encuentra(id_articulo) {
+			var sw = false;
 
-            for (var i = 0; i < this.array_detalle.length; i++) {
+			for (var i = 0; i < this.array_detalle.length; i++) {
 
-                if (this.array_detalle[i].id_articulo == id_articulo) {
+				if (this.array_detalle[i].id_articulo == id_articulo) {
 
-                    sw = true;
-                }
-            }
+					sw = true;
+				}
+			}
 
-            return sw;
-        },
-        eliminarDetalle: function eliminarDetalle(index) {
-            var me = this;
-            me.array_detalle.splice(index, 1);
-        },
-        agregarDetalle: function agregarDetalle() {
-            var me = this;
+			return sw;
+		},
+		eliminarDetalle: function eliminarDetalle(index) {
+			var me = this;
+			me.array_detalle.splice(index, 1);
+		},
+		agregarDetalle: function agregarDetalle() {
+			var me = this;
 
-            if (me.id_articulo == 0 || me.cantidad == 0 || me.precio_venta == 0) {} else {
+			if (me.id_articulo == 0 || me.cantidad == 0 || me.precio_venta == 0) {} else {
 
-                if (me.encuentra(me.id_articulo)) {
-                    swal({
-                        type: 'error',
-                        title: 'Error...',
-                        text: 'Ese articulo ya se encuentra agregado'
-                    });
-                } else {
+				if (me.encuentra(me.id_articulo)) {
+					swal({
+						type: 'error',
+						title: 'Error...',
+						text: 'Ese articulo ya se encuentra agregado'
+					});
+				} else {
 
-                    if (me.cantidad > me.stock) {
-                        swal({
-                            type: 'error',
-                            title: 'Error...',
-                            text: 'No hay stock disponible'
-                        });
-                    } else {
-                        me.array_detalle.push({
-                            id_articulo: me.id_articulo,
-                            articulo: me.articulo,
-                            cantidad: me.cantidad,
-                            precio_venta: me.precio_venta,
-                            descuento: me.descuento,
-                            stock: me.stock
-                        });
+					if (me.cantidad > me.stock) {
+						swal({
+							type: 'error',
+							title: 'Error...',
+							text: 'No hay stock disponible'
+						});
+					} else {
+						me.array_detalle.push({
+							id_articulo: me.id_articulo,
+							articulo: me.articulo,
+							cantidad: me.cantidad,
+							precio_venta: me.precio_venta,
+							descuento: me.descuento,
+							stock: me.stock
+						});
 
-                        me.codigo = '';
-                        me.id_articulo = 0;
-                        me.articulo = '';
-                        me.cantidad = 0;
-                        me.precio_venta = 0;
-                        me.descuento = 0;
-                        me.stock = 0;
-                    }
-                }
-            }
-        },
-        agregarDetalleModal: function agregarDetalleModal() {
-            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+						me.codigo = '';
+						me.id_articulo = 0;
+						me.articulo = '';
+						me.cantidad = 0;
+						me.precio_venta = 0;
+						me.descuento = 0;
+						me.stock = 0;
+					}
+				}
+			}
+		},
+		agregarDetalleModal: function agregarDetalleModal() {
+			var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
 
 
-            var me = this;
+			var me = this;
 
-            if (me.encuentra(data['id'])) {
-                swal({
-                    type: 'error',
-                    title: 'Error...',
-                    text: 'Ese articulo ya se encuentra agregado'
-                });
-            } else {
+			if (me.encuentra(data['id'])) {
+				swal({
+					type: 'error',
+					title: 'Error...',
+					text: 'Ese articulo ya se encuentra agregado'
+				});
+			} else {
 
-                me.array_detalle.push({
-                    id_articulo: data['id'],
-                    articulo: data['nombre'],
-                    cantidad: 1,
-                    precio_venta: data['precio_venta'],
-                    descuento: 0,
-                    stock: data['stock']
-                });
-            }
-        },
-        listarArticulo: function listarArticulo(buscar, criterio) {
-            var me = this;
-            var url = '/articulo/listar-articulo-venta?buscar=' + buscar + '&criterio=' + criterio;
+				me.array_detalle.push({
+					id_articulo: data['id'],
+					articulo: data['nombre'],
+					cantidad: 1,
+					precio_venta: data['precio_venta'],
+					descuento: 0,
+					stock: data['stock']
+				});
+			}
+		},
+		listarArticulo: function listarArticulo(buscar, criterio) {
+			var me = this;
+			var url = '/articulo/listar-articulo-venta?buscar=' + buscar + '&criterio=' + criterio;
 
-            axios.get(url).then(function (response) {
-                me.array_articulo = response.data.data;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        registrarVenta: function registrarVenta() {
+			axios.get(url).then(function (response) {
+				me.array_articulo = response.data.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		registrarVenta: function registrarVenta() {
 
-            if (this.validarVenta()) {
-                return;
-            }
+			if (this.validarVenta()) {
+				return;
+			}
 
-            var me = this;
+			var me = this;
 
-            axios.post('/venta/registrar', {
+			axios.post('/venta/registrar', {
 
-                'id_cliente': this.id_cliente,
-                'tipo_comprobante': this.tipo_comprobante,
-                'serie_comprobante': this.serie_comprobante,
-                'num_comprobante': this.num_comprobante,
-                'impuesto': this.impuesto,
-                'total': this.total,
-                'data': this.array_detalle
+				'id_cliente': this.id_cliente,
+				'tipo_comprobante': this.tipo_comprobante,
+				'serie_comprobante': this.serie_comprobante,
+				'num_comprobante': this.num_comprobante,
+				'impuesto': this.impuesto,
+				'total': this.total,
+				'data': this.array_detalle
 
-            }).then(function (response) {
+			}).then(function (response) {
 
-                me.listado = 1;
-                me.listarVenta(1, '', 'num_comprobante');
-                me.id_cliente = 0;
-                me.tipo_comprobante = 'BOLETA';
-                me.serie_comprobante = '';
-                me.num_comprobante = '';
-                me.impuesto = 0.12;
-                me.total = 0.0;
-                me.id_articulo = '';
-                me.cantidad = 0;
-                me.precio_venta = 0;
-                me.codigo = 0;
-                me.descuento = 0;
-                me.stock = 0;
-                me.array_detalle = [];
-                window.open('http://127.0.0.1:8000/venta/pdf/' + response.data.id, '_blank');
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        validarVenta: function validarVenta() {
-            var me = this;
-            this.error_venta = 0;
-            this.error_msj_ven = [];
-            var art;
+				me.listado = 1;
+				me.listarVenta(1, '', 'num_comprobante');
+				me.id_cliente = 0;
+				me.tipo_comprobante = 'BOLETA';
+				me.serie_comprobante = '';
+				me.num_comprobante = '';
+				me.impuesto = 0.12;
+				me.total = 0.0;
+				me.id_articulo = '';
+				me.cantidad = 0;
+				me.precio_venta = 0;
+				me.codigo = 0;
+				me.descuento = 0;
+				me.stock = 0;
+				me.array_detalle = [];
+				window.open('http://127.0.0.1:8000/venta/pdf/' + response.data.id, '_blank');
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		validarVenta: function validarVenta() {
+			var me = this;
+			this.error_venta = 0;
+			this.error_msj_ven = [];
+			var art;
 
-            me.array_detalle.map(function (x) {
-                if (x.cantidad > x.stock) {
-                    art = x.articulo + " con stock insuficiente";
-                    me.error_msj_ven.push(art);
-                }
-            });
+			me.array_detalle.map(function (x) {
+				if (x.cantidad > x.stock) {
+					art = x.articulo + " con stock insuficiente";
+					me.error_msj_ven.push(art);
+				}
+			});
 
-            if (!me.id_cliente) me.error_msj_ven.push('Seleccione un cliente');
+			if (!me.id_cliente) me.error_msj_ven.push('Seleccione un cliente');
 
-            if (!me.tipo_comprobante) me.error_msj_ven.push('Seleccione el comprobante');
+			if (!me.tipo_comprobante) me.error_msj_ven.push('Seleccione el comprobante');
 
-            if (!me.num_comprobante) me.error_msj_ven.push('Ingrese el numero de comprobante');
+			if (!me.num_comprobante) me.error_msj_ven.push('Ingrese el numero de comprobante');
 
-            if (!me.impuesto) me.error_msj_ven.push('Ingrese el impuesto de compra');
+			if (!me.impuesto) me.error_msj_ven.push('Ingrese el impuesto de compra');
 
-            if (me.array_detalle <= 0) me.error_msj_ven.push('Ingrese detalles');
+			if (me.array_detalle <= 0) me.error_msj_ven.push('Ingrese detalles');
 
-            if (me.error_msj_ven.length) me.error_venta = 1;
+			if (me.error_msj_ven.length) me.error_venta = 1;
 
-            return me.error_venta;
-        },
-        cerrarModal: function cerrarModal() {
-            this.modal = 0;
-            this.titulo_modal = '';
-        },
-        mostrarDetalle: function mostrarDetalle() {
-            var me = this;
-            this.listado = 0;
+			return me.error_venta;
+		},
+		cerrarModal: function cerrarModal() {
+			this.modal = 0;
+			this.titulo_modal = '';
+		},
+		mostrarDetalle: function mostrarDetalle() {
+			var me = this;
+			this.listado = 0;
 
-            me.id_cliente = 0;
-            me.tipo_comprobante = 'BOLETA';
-            me.serie_comprobante = '';
-            me.num_comprobante = '';
-            me.impuesto = 0.12;
-            me.total = 0.0;
-            me.id_articulo = '';
-            me.cantidad = 0;
-            me.precio_venta = 0;
-            me.array_detalle = [];
-        },
-        ocultarDetalle: function ocultarDetalle() {
-            this.listado = 1;
-        },
-        verVenta: function verVenta(id) {
-            var me = this;
-            me.listado = 2;
+			me.id_cliente = 0;
+			me.tipo_comprobante = 'BOLETA';
+			me.serie_comprobante = '';
+			me.num_comprobante = '';
+			me.impuesto = 0.12;
+			me.total = 0.0;
+			me.id_articulo = '';
+			me.cantidad = 0;
+			me.precio_venta = 0;
+			me.array_detalle = [];
+		},
+		ocultarDetalle: function ocultarDetalle() {
+			this.listado = 1;
+		},
+		verVenta: function verVenta(id) {
+			var me = this;
+			me.listado = 2;
 
-            //obtener los datos del venta
-            var array_ingreso_t = [];
-            var url = '/venta/obtener-cabecera?id=' + id;
+			//obtener los datos del venta
+			var array_ingreso_t = [];
+			var url = '/venta/obtener-cabecera?id=' + id;
 
-            axios.get(url).then(function (response) {
-                array_ingreso_t = response.data;
+			axios.get(url).then(function (response) {
+				array_ingreso_t = response.data;
 
-                me.cliente = array_ingreso_t[0]['nombre'];
-                me.tipo_comprobante = array_ingreso_t[0]['tipo_comprobante'];
-                me.serie_comprobante = array_ingreso_t[0]['serie_comprobante'];
-                me.num_comprobante = array_ingreso_t[0]['num_comprobante'];
-                me.impuesto = array_ingreso_t[0]['impuesto'];
-                me.total = array_ingreso_t[0]['total'];
-            }).catch(function (error) {
-                console.log(error);
-            });
-            //obtener los  datos de los detalles
-            var url_d = '/venta/obtener-detalles?id=' + id;
+				me.cliente = array_ingreso_t[0]['nombre'];
+				me.tipo_comprobante = array_ingreso_t[0]['tipo_comprobante'];
+				me.serie_comprobante = array_ingreso_t[0]['serie_comprobante'];
+				me.num_comprobante = array_ingreso_t[0]['num_comprobante'];
+				me.impuesto = array_ingreso_t[0]['impuesto'];
+				me.total = array_ingreso_t[0]['total'];
+			}).catch(function (error) {
+				console.log(error);
+			});
+			//obtener los  datos de los detalles
+			var url_d = '/venta/obtener-detalles?id=' + id;
 
-            axios.get(url_d).then(function (response) {
-                me.array_detalle = response.data;
-            }).catch(function (error) {
-                console.log(error);
-            });
-        },
-        abrirModal: function abrirModal() {
-            this.array_articulo = [];
-            this.modal = 1;
-            this.titulo_modal = 'Seleccione uno o varios articulos';
-        },
-        desactivarVenta: function desactivarVenta(id) {
-            var _this = this;
+			axios.get(url_d).then(function (response) {
+				me.array_detalle = response.data;
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		abrirModal: function abrirModal() {
+			this.array_articulo = [];
+			this.modal = 1;
+			this.titulo_modal = 'Seleccione uno o varios articulos';
+		},
+		desactivarVenta: function desactivarVenta(id) {
+			var _this = this;
 
-            swal({
-                title: '¿Estas seguro de anular esta venta?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Aceptar',
-                cancelButtonText: 'Cancelar',
-                confirmButtonClass: 'btn btn-success',
-                cancelButtonClass: 'btn btn-danger',
-                buttonsStyling: false,
-                reverseButtons: true
-            }).then(function (result) {
-                if (result.value) {
+			swal({
+				title: '¿Estas seguro de anular esta venta?',
+				type: 'warning',
+				showCancelButton: true,
+				confirmButtonColor: '#3085d6',
+				cancelButtonColor: '#d33',
+				confirmButtonText: 'Aceptar',
+				cancelButtonText: 'Cancelar',
+				confirmButtonClass: 'btn btn-success',
+				cancelButtonClass: 'btn btn-danger',
+				buttonsStyling: false,
+				reverseButtons: true
+			}).then(function (result) {
+				if (result.value) {
 
-                    var me = _this;
+					var me = _this;
 
-                    axios.put('/venta/desactivar', {
-                        'id': id
-                    }).then(function (response) {
-                        me.listarVenta(1, '', 'num_comprobante');
-                        swal('Anulada', 'La venta ha sido desactivada', 'success');
-                    }).catch(function (error) {
-                        console.log(error);
-                    });
-                } else if (
-                // Read more about handling dismissals
-                result.dismiss === swal.DismissReason.cancel) {}
-            });
-        },
-        limpiarBuscar: function limpiarBuscar() {
-            this.buscar = '';
-            this.criterio = 'num_comprobante';
-            this.listarVenta(1, this.buscar, this.criterio);
-        }
-    },
-    mounted: function mounted() {
-        this.listarVenta(1, this.buscar, this.criterio);
-    }
+					axios.put('/venta/desactivar', {
+						'id': id
+					}).then(function (response) {
+						me.listarVenta(1, '', 'num_comprobante');
+						swal('Anulada', 'La venta ha sido desactivada', 'success');
+					}).catch(function (error) {
+						console.log(error);
+					});
+				} else if (
+				// Read more about handling dismissals
+				result.dismiss === swal.DismissReason.cancel) {}
+			});
+		},
+		limpiarBuscar: function limpiarBuscar() {
+			this.buscar = '';
+			this.criterio = 'num_comprobante';
+			this.listarVenta(1, this.buscar, this.criterio);
+		}
+	},
+	mounted: function mounted() {
+		this.listarVenta(1, this.buscar, this.criterio);
+	}
 });
 
 /***/ }),
@@ -47250,7 +47230,7 @@ var render = function() {
         [
           _c("div", { staticClass: "card-header" }, [
             _c("i", { staticClass: "fa fa-align-justify" }),
-            _vm._v(" Ventas\n            "),
+            _vm._v(" Ventas\n\t\t\t"),
             _c(
               "button",
               {
@@ -47262,10 +47242,7 @@ var render = function() {
                   }
                 }
               },
-              [
-                _c("i", { staticClass: "icon-plus" }),
-                _vm._v(" Nuevo\n            ")
-              ]
+              [_c("i", { staticClass: "icon-plus" }), _vm._v(" Nuevo\n\t\t\t")]
             )
           ]),
           _vm._v(" "),
@@ -47392,7 +47369,7 @@ var render = function() {
                           },
                           [
                             _c("i", { staticClass: "icon-trash" }),
-                            _vm._v(" Limpiar\n                            ")
+                            _vm._v(" Limpiar\n\t\t\t\t\t\t\t")
                           ]
                         )
                       ])
@@ -47624,7 +47601,7 @@ var render = function() {
                                 "on-search": _vm.listarCliente,
                                 label: "nombre",
                                 options: _vm.array_cliente,
-                                placeholder: "Buscar Proveedores...",
+                                placeholder: "Buscar Clientes...",
                                 onChange: _vm.getDatosCliente
                               }
                             })
@@ -48223,13 +48200,13 @@ var render = function() {
                                         _vm._v(" "),
                                         _c("td", [
                                           _vm._v(
-                                            "\n                                        " +
+                                            "\n\t\t\t\t\t\t\t\t\t\t" +
                                               _vm._s(
                                                 detalle.precio_venta *
                                                   detalle.cantidad -
                                                   detalle.descuento
                                               ) +
-                                              "\n                                    "
+                                              "\n\t\t\t\t\t\t\t\t\t"
                                           )
                                         ])
                                       ])
@@ -48462,13 +48439,13 @@ var render = function() {
                                             _vm._v(" "),
                                             _c("td", [
                                               _vm._v(
-                                                "\n                                        " +
+                                                "\n\t\t\t\t\t\t\t\t\t\t" +
                                                   _vm._s(
                                                     detalle.precio *
                                                       detalle.cantidad -
                                                       detalle.descuento
                                                   ) +
-                                                  "\n                                    "
+                                                  "\n\t\t\t\t\t\t\t\t\t"
                                               )
                                             ])
                                           ])
@@ -48926,7 +48903,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", { attrs: { colspan: "6" } }, [
         _vm._v(
-          "\n                                        NO hay articulos agregados\n                                    "
+          "\n\t\t\t\t\t\t\t\t\t\tNO hay articulos agregados\n\t\t\t\t\t\t\t\t\t"
         )
       ])
     ])
@@ -48978,7 +48955,7 @@ var staticRenderFns = [
     return _c("tr", [
       _c("td", { attrs: { colspan: "5" } }, [
         _vm._v(
-          "\n                                        NO hay articulos agregados\n                                    "
+          "\n\t\t\t\t\t\t\t\t\t\tNO hay articulos agregados\n\t\t\t\t\t\t\t\t\t"
         )
       ])
     ])
@@ -49012,6 +48989,293 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-42224765", module.exports)
+  }
+}
+
+/***/ }),
+/* 131 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(4)
+/* script */
+var __vue_script__ = __webpack_require__(132)
+/* template */
+var __vue_template__ = __webpack_require__(133)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Dashboard.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-78b73b2d", Component.options)
+  } else {
+    hotAPI.reload("data-v-78b73b2d", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 132 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	data: function data() {
+		return {
+			var_ingreso: null,
+			char_ingreso: null,
+			ingresos: [],
+			var_total_ingreso: [],
+			var_mes_ingreso: [],
+			var_venta: null,
+			char_venta: null,
+			ventas: [],
+			var_total_venta: [],
+			var_mes_venta: []
+		};
+	},
+
+	methods: {
+		getIngresosVentas: function getIngresosVentas() {
+			var me = this;
+			var url = '/dashboard';
+
+			axios.get(url).then(function (response) {
+				me.ingresos = response.data.ingresos;
+				me.ventas = response.data.ventas;
+				me.loadIngresos();
+				me.loadVentas();
+			}).catch(function (error) {
+				console.log(error);
+			});
+		},
+		loadIngresos: function loadIngresos() {
+			var me = this;
+
+			me.ingresos.map(function (x) {
+				me.var_mes_ingreso.push(x.mes);
+				me.var_total_ingreso.push(x.total);
+			});
+
+			me.var_ingreso = document.getElementById('ingresos').getContext('2d');
+
+			me.char_ingreso = new Chart(me.var_ingreso, {
+				type: 'bar',
+				data: {
+					labels: me.var_mes_ingreso,
+					datasets: [{
+						label: 'Ingresos',
+						data: me.var_total_ingreso,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+						borderColor: 'rgba(255, 99, 132, 0.2)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			});
+		},
+		loadVentas: function loadVentas() {
+			var me = this;
+
+			me.ventas.map(function (x) {
+				me.var_mes_venta.push(x.mes);
+				me.var_total_venta.push(x.total);
+			});
+
+			me.var_venta = document.getElementById('ventas').getContext('2d');
+
+			me.char_venta = new Chart(me.var_venta, {
+				type: 'bar',
+				data: {
+					labels: me.var_mes_venta,
+					datasets: [{
+						label: 'Ventas',
+						data: me.var_total_venta,
+						backgroundColor: 'rgba(54, 162, 235, 0.2)',
+						borderColor: 'rgba(54, 162, 235, 0.2)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			});
+		}
+	},
+	mounted: function mounted() {
+		this.getIngresosVentas();
+	}
+});
+
+/***/ }),
+/* 133 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("main", { staticClass: "main" }, [
+      _c("ol", { staticClass: "breadcrumb" }, [
+        _c("li", { staticClass: "breadcrumb-item" }, [
+          _c("a", { attrs: { href: "/" } }, [_vm._v("Escritorio")])
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "container-fluid" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "card card-chart" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h4", [_vm._v("Ingresos")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-content" }, [
+                    _c("div", { staticClass: "ct-chart" }, [
+                      _c("canvas", { attrs: { id: "ingresos" } })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c("p", [_vm._v("Compras de los últimos meses.")])
+                  ])
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("div", { staticClass: "card card-chart" }, [
+                  _c("div", { staticClass: "card-header" }, [
+                    _c("h4", [_vm._v("Ventas")])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-content" }, [
+                    _c("div", { staticClass: "ct-chart" }, [
+                      _c("canvas", { attrs: { id: "ventas" } })
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "card-footer" }, [
+                    _c("p", [_vm._v("Ventas de los últimos meses.")])
+                  ])
+                ])
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-78b73b2d", module.exports)
   }
 }
 
