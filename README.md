@@ -1,6 +1,6 @@
 # proyecto_u
 
-Sistema de compra y venta de articulos. Desarrollado con Laravel 5.6, Vuejs 2.0, Mysql.
+Sistema de compras y ventas de articulos. Desarrollado con Laravel 5.6, Vuejs 2.0 y Mysql.
 Proyecto elaborado en base al curso de Udemy del Ingeniero de sistemas, Juan Carlos Arcila Diaz.
 
 INSTALACION:
